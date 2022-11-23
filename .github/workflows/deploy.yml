@@ -25,7 +25,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           project_id: mf-video-poker
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCLOUD_CREDENTIALS_JSON }}
 
       - name: Set up gCloud SDK
         uses: google-github-actions/setup-gcloud@v1
