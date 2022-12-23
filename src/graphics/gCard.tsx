@@ -2,6 +2,8 @@ import { ReactElement } from "react";
 import styled from "styled-components";
 import { Card } from "../types/card";
 import { valueToFaceCard } from "../utils/valueToFaceCard";
+import { useVariant } from "../redux/hooks";
+import { VARIANT } from "../types/variant";
 
 const CardDiv = styled.div`
   background: white;
@@ -35,12 +37,15 @@ export const GCard = ({ card }: { card: Card }): ReactElement => {
   const suitSymbol = gSuit[suit];
   const suitColor = cSuit[suit];
   const cardValue = valueToFaceCard(value);
+  const variant = useVariant();
+  const wild = variant === VARIANT.DEUCES_WILD && value === 2;
 
   return (
     <CardDiv>
       <TextSpan style={{ color: suitColor }}>
         {cardValue}
         {suitSymbol}
+        {wild && <div>WILD</div>}
       </TextSpan>
     </CardDiv>
   );

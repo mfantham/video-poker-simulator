@@ -1,4 +1,5 @@
 import { newDeck } from "../mechanics/deal";
+import { choose, ithCombination } from "./combinations";
 
 export const combinations = (
   array: Array<number>,
@@ -24,9 +25,14 @@ export const combinations = (
   return output;
 };
 
-export const allPossibleHands = () => {
+const computeAllPossibleHands = () => {
   // Returns an array of length 52C5 = 2,598,960
   const deck = newDeck();
-  const arrayOfNumericChoices = Array.from(Array(deck.length).keys());
-  return combinations(arrayOfNumericChoices, 5);
+  const nOptions = choose(deck.length, 5);
+  const allHands = new Array(nOptions).fill(0).map((_, idx) => {
+    return ithCombination(idx, deck.length, 5);
+  });
+  return allHands;
 };
+
+export const allPossibleHands = computeAllPossibleHands();

@@ -1,5 +1,5 @@
-import { Hand } from "../types/hand";
-import { sortHand } from "../types/sortHand";
+import { Hand } from "../../types/hand";
+import { sortHand } from "../../types/sortHand";
 
 const handValueRepeats = (hand: Hand): Array<number> => {
   let repeatCounter = new Array(14).fill(0);

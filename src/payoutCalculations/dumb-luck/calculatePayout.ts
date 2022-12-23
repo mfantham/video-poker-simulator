@@ -1,4 +1,4 @@
-import { Hand } from "../types/hand";
+import { Hand } from "../../types/hand";
 import {
   isFour,
   isThree,

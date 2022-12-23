@@ -1,5 +1,5 @@
-import { Hand } from "../types/hand";
-import { sortHand } from "../types/sortHand";
+import { Hand } from "../../types/hand";
+import { sortHand } from "../../types/sortHand";
 
 const handValueRepeats = (hand: Hand): Array<number> => {
   let repeatCounter = new Array(14).fill(0);
@@ -33,6 +33,20 @@ export const isTwoPair = (hand: Hand): boolean => {
 export const isPair = (hand: Hand): boolean => {
   const repeatsCount = handValueRepeats(hand);
   return repeatsCount[0] === 2 && repeatsCount[1] < 2;
+};
+
+export const isJacksOrBetter = (hand: Hand): boolean => {
+  if (!isPair(hand)) {
+    return false;
+  }
+  let repeatCounter = new Array(14).fill(0);
+  hand.forEach(({ value }) => repeatCounter[value]++);
+  return (
+    repeatCounter[1] === 2 ||
+    repeatCounter[11] === 2 ||
+    repeatCounter[12] === 2 ||
+    repeatCounter[13] === 2
+  );
 };
 
 export const isNaturalRoyalFlush = (hand: Hand): boolean => {
@@ -71,10 +85,3 @@ export const isStraight = (hand: Hand): boolean => {
   }
   return true;
 };
-
-// const isWildStraight = (hand: Hand): boolean => {}; // eek. maintain a count of number of 2s?
-//
-// const isWildFlush = (hand: Hand): boolean => {
-//   const suit0 = hand[0].suit;
-//   return !hand.some(({ suit, value }) => suit !== suit0 && value !== 2);
-// };

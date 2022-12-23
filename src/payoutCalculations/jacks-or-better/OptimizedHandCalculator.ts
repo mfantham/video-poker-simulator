@@ -1,5 +1,5 @@
-import { Hand } from "../types/hand";
-import { sortHand } from "../types/sortHand";
+import { Hand } from "../../types/hand";
+import { sortHand } from "../../types/sortHand";
 
 export class OptimizedHandCalculator {
   hand: Hand;

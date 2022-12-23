@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Deck } from "../types/deck";
 import { Hand } from "../types/hand";
 import { deal } from "../mechanics/deal";
+import { VARIANT } from "../types/variant";
 
 enum Stages {
   PREGAME,
@@ -13,6 +14,7 @@ enum Stages {
 }
 
 interface AppState {
+  variant: VARIANT;
   deck: Deck;
   coins: number;
   currentHand: Hand;
@@ -29,6 +31,7 @@ const initialHand: Hand = [
 ];
 
 export const initialState: AppState = {
+  variant: VARIANT.DEUCES_WILD,
   deck: initialDeck,
   coins: 1000,
   currentHand: initialHand,
@@ -40,6 +43,9 @@ export const gameSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
+    setVariant: (state, { payload: newVariant }) => {
+      state.variant = newVariant;
+    },
     increment: (state) => {
       state.coins += 1;
     },
@@ -56,4 +62,5 @@ export const gameSlice = createSlice({
 });
 
 export const reducers = combineReducers({ game: gameSlice.reducer });
-export const { incrementByAmount, decrementByAmount } = gameSlice.actions;
+export const { incrementByAmount, decrementByAmount, setVariant } =
+  gameSlice.actions;

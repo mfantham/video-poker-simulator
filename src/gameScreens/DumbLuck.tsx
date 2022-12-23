@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { GHand } from "../graphics/gHand";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { calculatePayout } from "../dumb-luck/calculatePayout";
+import { calculatePayout } from "../payoutCalculations/dumb-luck/calculatePayout";
 import { deal } from "../mechanics/deal";
 import { decrementByAmount, incrementByAmount } from "../redux/reducers";
-import { costOfGame } from "../dumb-luck/payout";
+import { costOfGame } from "../payoutCalculations/dumb-luck/payout";
 import { HandExplorer } from "./HandExplorer";
 
 export const DumbLuck = () => {

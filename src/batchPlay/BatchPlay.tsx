@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 import { deal } from "../mechanics/deal";
-import { calculatePayout } from "../dumb-luck/calculatePayout";
-import { costOfGame } from "../dumb-luck/payout";
+import { calculatePayout } from "../payoutCalculations/dumb-luck/calculatePayout";
+import { costOfGame } from "../payoutCalculations/dumb-luck/payout";
 import { HistoryGraph } from "./HistoryGraph";
 import { initialState } from "../redux/reducers";
 
