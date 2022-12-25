@@ -15,7 +15,7 @@ export enum WIN_ENCODING {
 export const WinName = {
   [WIN_ENCODING.NATURAL_ROYAL_FLUSH]: "Natural Royal Flush",
   [WIN_ENCODING.FOUR_DEUCES]: "Four Deuces",
-  [WIN_ENCODING.ROYAL_FLUSH]: "Royal Flush",
+  [WIN_ENCODING.ROYAL_FLUSH]: "Wild royal Flush",
   [WIN_ENCODING.FIVE_OF_A_KIND]: "Five of a Kind",
   [WIN_ENCODING.STRAIGHT_FLUSH]: "Straight Flush",
   [WIN_ENCODING.FOUR_OF_A_KIND]: "Four of a Kind",

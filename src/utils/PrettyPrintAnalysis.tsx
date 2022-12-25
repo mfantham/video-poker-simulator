@@ -13,7 +13,7 @@ export const PrettyPrintAnalysis = ({
   const rows = analysisTable.map(([holdPattern, holdStats]) => {
     const statsColumns = Object.values(holdStats).map((v, i) => {
       if (i === 2) return <td key={i}>{v.toFixed(0)}</td>;
-      return <td key={i}>{v.toPrecision(4)}</td>;
+      return <td key={i}>{v.toPrecision(5)}</td>;
     });
     return (
       <tr key={holdPattern}>

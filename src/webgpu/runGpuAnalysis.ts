@@ -1,5 +1,7 @@
 const N_HANDS = 2598960; // 52C5: number of possible poker hands
 const N_HOLDS = 32; // 2^5: number of possible hold combinations
+const WORKGROUP_SIZE = 40; // This needs to be both a factor of N_HANDS and smaller than 256
+const N_WORKGROUPS = N_HANDS / WORKGROUP_SIZE; // This needs to be a factor of N_HANDS and smaller than 65536
 
 export const runGpuAnalysis = async (
   handIndex: number,
@@ -139,7 +141,7 @@ export const runGpuAnalysis = async (
       return result;
     }
     
-    @compute @workgroup_size(40)
+    @compute @workgroup_size(${WORKGROUP_SIZE})
     fn main(  
       @builtin(global_invocation_id)
       global_id : vec3<u32>,
@@ -147,13 +149,15 @@ export const runGpuAnalysis = async (
       local_id : vec3<u32>
   ) {
       // Worker is responsible for ith nCr hand. 
+      if (global_id.x >= ${N_HANDS}) {
+        return;
+     }
       
       // 1. What hand should I evaluate? 
-      var evaluationHandIdx = global_id.x; // Get from global/local index combination.
+      var evaluationHandIdx = global_id.x; 
       
       // 2. What's the payout for this hand?
       var payout = lookupPayTable[evaluationHandIdx];
-      
       // 3. What cards were held in the input hand?
       var inputHand = ithCombination(inputHandIdx, deckSize, handSize);
       var evaluationHand = ithCombination(evaluationHandIdx, deckSize, handSize);
@@ -167,10 +171,10 @@ export const runGpuAnalysis = async (
       }
       
       // Add stats to the holds table output
-      let atomic_output_ptr: ptr<storage, atomic<u32>, read_write>  = &output[holdMask];
-      let atomic_holds_ptr: ptr<storage, atomic<u32>, read_write>  = &holds[holdMask];
-      let atomic_nWins_ptr: ptr<storage, atomic<u32>, read_write>  = &nWins[holdMask];
-      let atomic_maxPayout_ptr: ptr<storage, atomic<u32>, read_write>  = &maxPayout[holdMask];
+      let atomic_output_ptr: ptr<storage, atomic<u32>, read_write> = &output[holdMask];
+      let atomic_holds_ptr: ptr<storage, atomic<u32>, read_write> = &holds[holdMask];
+      let atomic_nWins_ptr: ptr<storage, atomic<u32>, read_write> = &nWins[holdMask];
+      let atomic_maxPayout_ptr: ptr<storage, atomic<u32>, read_write> = &maxPayout[holdMask];
       
       atomicAdd(atomic_output_ptr, payout);
       atomicAdd(atomic_holds_ptr, 1u);
@@ -204,7 +208,7 @@ export const runGpuAnalysis = async (
   const passEncoder = commandEncoder.beginComputePass();
   passEncoder.setPipeline(pipeline);
   passEncoder.setBindGroup(0, bindGroup);
-  passEncoder.dispatchWorkgroups(65535);
+  passEncoder.dispatchWorkgroups(N_WORKGROUPS);
   passEncoder.end();
 
   const resultReadBuffer = device.createBuffer({

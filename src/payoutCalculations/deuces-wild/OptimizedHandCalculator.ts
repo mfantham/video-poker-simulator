@@ -14,9 +14,9 @@ export class OptimizedHandCalculator {
 
   constructor(newHand: Hand) {
     this.hand = newHand;
+    this.deucelessHand = this.hand.filter(({ value }) => value !== 2);
 
     this.handRepeats = new Array(14).fill(0);
-    this.deucelessHand = this.hand.filter(({ value }) => value !== 2);
     this.deucelessHand.forEach(({ value }) => this.handRepeats[value]++);
     this.repeatCounter = this.handRepeats
       .slice()
@@ -35,6 +35,9 @@ export class OptimizedHandCalculator {
   };
 
   isRoyalStraight = (): boolean => {
+    if (this.repeatCounter[0] > 1) {
+      return false;
+    }
     const royalValues = [1, 10, 11, 12, 13];
     const isRoyalStraight = this.deucelessHand.every(({ value }) =>
       royalValues.includes(value)

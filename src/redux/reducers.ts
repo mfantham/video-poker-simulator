@@ -4,6 +4,7 @@ import { Deck } from "../types/deck";
 import { Hand } from "../types/hand";
 import { deal } from "../mechanics/deal";
 import { VARIANT } from "../types/variant";
+import { indexOfCombination } from "../strategy/combinations";
 
 enum Stages {
   PREGAME,
@@ -17,24 +18,17 @@ interface AppState {
   variant: VARIANT;
   deck: Deck;
   coins: number;
-  currentHand: Hand;
+  currentHandIdx: number;
   held: Array<boolean>;
 }
 
 const initialDeck: Deck = deal();
-const initialHand: Hand = [
-  initialDeck[0],
-  initialDeck[1],
-  initialDeck[2],
-  initialDeck[3],
-  initialDeck[4],
-];
 
 export const initialState: AppState = {
   variant: VARIANT.DEUCES_WILD,
   deck: initialDeck,
   coins: 1000,
-  currentHand: initialHand,
+  currentHandIdx: 0,
   held: [false, false, false, false, false],
 };
 
@@ -43,6 +37,13 @@ export const gameSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
+    setCurrentHandIdx: (state, { payload: newHandIdx }) => {
+      state.currentHandIdx = newHandIdx;
+    },
+    setCurrentHand: (state, { payload: hand }) => {
+      const handIdx = indexOfCombination(hand);
+      state.currentHandIdx = handIdx;
+    },
     setVariant: (state, { payload: newVariant }) => {
       state.variant = newVariant;
     },
@@ -62,5 +63,10 @@ export const gameSlice = createSlice({
 });
 
 export const reducers = combineReducers({ game: gameSlice.reducer });
-export const { incrementByAmount, decrementByAmount, setVariant } =
-  gameSlice.actions;
+export const {
+  incrementByAmount,
+  decrementByAmount,
+  setVariant,
+  setCurrentHand,
+  setCurrentHandIdx,
+} = gameSlice.actions;

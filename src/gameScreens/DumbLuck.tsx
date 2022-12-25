@@ -25,7 +25,7 @@ export const DumbLuck = () => {
 
   return (
     <>
-      {hand?.length && <GHand hand={hand} />}
+      {hand?.length && <GHand hand={hand} editable={false} />}
       <p>Payout: {isNaN(payout) ? "" : payout}</p>
       <p>Total coins: {coins.toFixed(0)}</p>
       <button onClick={handleDeal}>deal</button>

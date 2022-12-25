@@ -7,9 +7,15 @@ const HandHolder = styled.div`
   gap: 10px;
 `;
 
-export const GHand = ({ hand }: { hand: Hand }) => {
+export const GHand = ({
+  hand,
+  editable,
+}: {
+  hand: Hand;
+  editable: boolean;
+}) => {
   const cards = hand.map((card, idx) => {
-    return <GCard key={idx} card={card} />;
+    return <GCard key={idx} card={card} editable={editable} />;
   });
   return <HandHolder>{cards}</HandHolder>;
 };

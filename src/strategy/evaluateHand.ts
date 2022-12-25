@@ -37,12 +37,13 @@ export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
     const totalWins = gpuAnalysisResult.totalWins[holdId];
     const maxPayout = gpuAnalysisResult.maxPayout[holdId];
     const holdName = holdId.toString(2).padStart(5, "0");
-
+    console.log(holdName, totalPayout, totalSwaps);
     return {
       holdName,
       expectedPayout: totalPayout / totalSwaps,
       winProbability: (100 * totalWins) / totalSwaps,
       maxPossiblePayout: maxPayout,
+      fiveX: (5 * totalPayout) / totalSwaps,
     };
   });
 

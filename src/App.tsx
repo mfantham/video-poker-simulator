@@ -1,21 +1,21 @@
-import React from "react";
-import logo from "./logo.svg";
+import { useEffect } from "react";
 import "./App.css";
-import { DumbLuck } from "./gameScreens/DumbLuck";
-import { BatchPlay } from "./batchPlay/BatchPlay";
-import { HandExplorer } from "./gameScreens/HandExplorer";
+
 import { fetchPaytable } from "./payoutCalculations/jacks-or-better/calculatePayout";
+import { RouterProvider } from "react-router";
+import { router } from "./routing/Router";
 
 function App() {
   // Prefetch paytables
-  fetchPaytable();
+  useEffect(() => {
+    fetchPaytable();
+  }, []);
 
   return (
     <div className="App">
       <header className="App-header">
-        {/*<DumbLuck />*/}
-        {/*<BatchPlay />*/}
-        <HandExplorer />
+        {/* @ts-expect-error */}
+        <RouterProvider router={router} />
       </header>
     </div>
   );

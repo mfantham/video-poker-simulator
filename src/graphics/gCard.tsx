@@ -4,6 +4,7 @@ import { Card } from "../types/card";
 import { valueToFaceCard } from "../utils/valueToFaceCard";
 import { useVariant } from "../redux/hooks";
 import { VARIANT } from "../types/variant";
+import Select from "react-select";
 
 const CardDiv = styled.div`
   background: white;
@@ -32,7 +33,22 @@ const cSuit = {
   3: "black",
 };
 
-export const GCard = ({ card }: { card: Card }): ReactElement => {
+const NumberSelect = () => {
+  const options = new Array(13).fill(0).map((_, idx) => ({
+    value: idx,
+    label: valueToFaceCard(idx),
+  }));
+
+  return <Select options={options} />;
+};
+
+export const GCard = ({
+  card,
+  editable,
+}: {
+  card: Card;
+  editable: boolean;
+}): ReactElement => {
   const { value, suit } = card;
   const suitSymbol = gSuit[suit];
   const suitColor = cSuit[suit];

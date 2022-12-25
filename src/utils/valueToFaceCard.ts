@@ -1,14 +1,16 @@
-export const valueToFaceCard = (value: number) : string => {
+export const valueToFaceCard = (value: number, tenIsT = false): string => {
   switch (value) {
+    case 10:
+      return tenIsT ? "T" : "10";
     case 1:
-      return 'A';
+      return "A";
     case 11:
-      return 'J';
+      return "J";
     case 12:
-      return 'Q';
+      return "Q";
     case 13:
-      return 'K';
+      return "K";
     default:
       return `${value}`;
   }
-}
+};
