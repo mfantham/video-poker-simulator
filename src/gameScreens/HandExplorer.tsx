@@ -28,6 +28,20 @@ export const HandExplorer = () => {
   const [analysis, setAnalysis] = useState([] as HoldsTable);
   const [analysisTime, setAnalysisTime] = useState(0);
 
+  const runAnalysis = useCallback(
+    async (handIndex: number) => {
+      setAnalysing(true);
+      const tic = performance.now();
+      const analysisTable = await evaluateHand(handIndex, variant);
+
+      const toc = performance.now();
+      setAnalysing(false);
+      setAnalysisTime(toc - tic);
+      setAnalysis(analysisTable);
+    },
+    [variant]
+  );
+
   const hand = useMemo(() => {
     const combinationNumbers = ithCombination(handIdx, 52, 5);
     const combinationHand = [
@@ -39,23 +53,13 @@ export const HandExplorer = () => {
     ] as Hand;
     setAnalysis([]); // Analysis table not valid for this hand!
     setAnalysisTime(0);
+    runAnalysis(handIdx);
     return combinationHand;
   }, [handIdx]);
 
   const winName = useEvaluateWin(hand);
 
   const numberOfHands = choose(52, 5);
-
-  const runAnalysis = useCallback(async () => {
-    setAnalysing(true);
-    const tic = performance.now();
-    const analysisTable = await evaluateHand(hand, handIdx, variant);
-
-    const toc = performance.now();
-    setAnalysing(false);
-    setAnalysisTime(toc - tic);
-    setAnalysis(analysisTable);
-  }, [hand, handIdx, variant]);
 
   return (
     <>
@@ -76,7 +80,7 @@ export const HandExplorer = () => {
         {winName}
       </div>
       <GHand hand={hand} editable={true} />
-      <button onClick={runAnalysis}>Analyse hand</button>
+      <button onClick={() => runAnalysis(handIdx)}>Analyse hand</button>
       {analysisTime ? (
         <p>Analysis took {(analysisTime / 1000).toFixed(3)} s</p>
       ) : null}

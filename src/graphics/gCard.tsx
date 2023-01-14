@@ -5,6 +5,9 @@ import { valueToFaceCard } from "../utils/valueToFaceCard";
 import { useVariant } from "../redux/hooks";
 import { VARIANT } from "../types/variant";
 import Select from "react-select";
+import King from "./King.svg";
+import Queen from "./Queen.svg";
+import { Jack } from "./Jack.jsx";
 
 const CardDiv = styled.div`
   background: white;
@@ -42,6 +45,34 @@ const NumberSelect = () => {
   return <Select options={options} />;
 };
 
+const GFace = ({ value }: { value: number }) => {
+  const variant = useVariant();
+
+  switch (value) {
+    case 13:
+      return <img src={King} />;
+    case 12:
+      return <img src={Queen} />;
+    case 11:
+      return <Jack />;
+    case 2:
+      if (variant === VARIANT.DEUCES_WILD) {
+        return (
+          <div>
+            WILD
+            <br />
+            Wild
+            <br />
+            wild
+          </div>
+        );
+      } else return null;
+
+    default:
+      return null;
+  }
+};
+
 export const GCard = ({
   card,
   editable,
@@ -53,15 +84,13 @@ export const GCard = ({
   const suitSymbol = gSuit[suit];
   const suitColor = cSuit[suit];
   const cardValue = valueToFaceCard(value);
-  const variant = useVariant();
-  const wild = variant === VARIANT.DEUCES_WILD && value === 2;
 
   return (
     <CardDiv>
       <TextSpan style={{ color: suitColor }}>
         {cardValue}
         {suitSymbol}
-        {wild && <div>WILD</div>}
+        <GFace value={card.value} />
       </TextSpan>
     </CardDiv>
   );

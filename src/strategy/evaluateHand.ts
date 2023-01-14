@@ -6,7 +6,6 @@ import { runGpuAnalysis } from "../webgpu/runGpuAnalysis";
 import { VARIANT } from "../types/variant";
 
 export const evaluateHand = async (
-  hand: Hand,
   handIndex: number,
   variant: VARIANT
 ): Promise<HoldsTable> => {
@@ -37,7 +36,7 @@ export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
     const totalWins = gpuAnalysisResult.totalWins[holdId];
     const maxPayout = gpuAnalysisResult.maxPayout[holdId];
     const holdName = holdId.toString(2).padStart(5, "0");
-    console.log(holdName, totalPayout, totalSwaps);
+
     return {
       holdName,
       expectedPayout: totalPayout / totalSwaps,
