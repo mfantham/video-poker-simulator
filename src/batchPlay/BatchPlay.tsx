@@ -18,7 +18,7 @@ const ButtonsHolder = styled.div`
 const playNGames = (n = 100, startingCoin = initialCoins) => {
   let localHistory = [startingCoin];
   for (let i = 1; i <= n; i++) {
-    const newHand = deal();
+    const [newHand] = deal();
     const netPayout = calculatePayout(newHand) - costOfGame;
     localHistory.push(localHistory[i - 1] + netPayout);
   }

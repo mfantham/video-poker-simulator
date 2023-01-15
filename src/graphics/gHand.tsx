@@ -1,6 +1,7 @@
 import { Hand } from "../types/hand";
 import { GCard } from "./gCard";
 import styled from "styled-components";
+import { useHolds, useToggleHold } from "../redux/hooks";
 
 const HandHolder = styled.div`
   display: flex;
@@ -9,13 +10,31 @@ const HandHolder = styled.div`
 
 export const GHand = ({
   hand,
-  editable,
+  editable = false,
+  holdable = false,
 }: {
   hand: Hand;
-  editable: boolean;
+  editable?: boolean;
+  holdable?: boolean;
 }) => {
+  const toggleHold = useToggleHold();
+  const holds = useHolds();
+
   const cards = hand.map((card, idx) => {
-    return <GCard key={idx} card={card} editable={editable} />;
+    const holdCallback = (idx: number) => {
+      if (holdable) toggleHold(idx);
+    };
+
+    return (
+      <GCard
+        key={idx}
+        card={card}
+        editable={editable}
+        holdable={holdable}
+        hold={holds[idx]}
+        holdCallback={() => holdCallback(idx)}
+      />
+    );
   });
   return <HandHolder>{cards}</HandHolder>;
 };

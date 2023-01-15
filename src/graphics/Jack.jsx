@@ -1,6 +1,6 @@
-export const Jack = () => {
+export const Jack = ({ style }) => {
   return (
-    <svg width="264px" height="280px" viewBox="0 0 264 280" version="1.1">
+    <svg viewBox="0 0 264 280" version="1.1" style={style}>
       <defs>
         <circle id="background-circle" cx="120" cy="120" r="120"></circle>
         <path

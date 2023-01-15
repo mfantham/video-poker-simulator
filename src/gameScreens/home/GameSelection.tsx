@@ -2,6 +2,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { SelectorSVG } from "./selectors/SelectorSVG";
 import { GameVariant } from "../../types/GameVariant";
+import { PlayDeucesWild } from "../PlayDeucesWild";
 
 const Selector = ({
   route,
@@ -56,6 +57,7 @@ export const GameSelection = () => {
           path="single"
           element={<GameSelectors multiOption={"singlePlay"} />}
         />
+        <Route path="single/deuces" element={<PlayDeucesWild />} />
         <Route
           path="triple"
           element={<GameSelectors multiOption={"triplePlay"} />}

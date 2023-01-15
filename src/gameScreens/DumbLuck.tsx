@@ -5,23 +5,22 @@ import { calculatePayout } from "../payoutCalculations/dumb-luck/calculatePayout
 import { deal } from "../mechanics/deal";
 import { decrementByAmount, incrementByAmount } from "../redux/reducers";
 import { costOfGame } from "../payoutCalculations/dumb-luck/payout";
-import { HandExplorer } from "./HandExplorer";
 
 export const DumbLuck = () => {
   const dispatch = useAppDispatch();
   // const hand = useAppSelector((s) => s.game.currentHand);
   const coins = useAppSelector((s) => s.game.coins);
   const [payout, setPayout] = useState(NaN);
-  const [hand, setHand] = useState(deal());
+  const [hand, setHand] = useState(deal()[0]);
 
   const handleDeal = useCallback(() => {
-    const newHand = deal();
+    const [newHand, _] = deal();
     dispatch(decrementByAmount(costOfGame));
     const newPayout = calculatePayout(newHand);
     setHand(newHand);
     setPayout(newPayout);
     dispatch(incrementByAmount(newPayout));
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

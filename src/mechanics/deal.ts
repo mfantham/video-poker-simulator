@@ -30,9 +30,9 @@ export const newDeck = (): Deck => {
   return indexedDeck;
 };
 
-export const deal = (): Hand => {
+export const deal = (): [Hand, Deck] => {
   const deck = newDeck();
   const shuffled = shuffle(deck);
   const hand = shuffled.slice(0, 5) as Hand;
-  return hand;
+  return [hand, shuffled];
 };

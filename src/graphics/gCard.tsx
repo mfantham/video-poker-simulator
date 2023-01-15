@@ -9,13 +9,14 @@ import King from "./King.svg";
 import Queen from "./Queen.svg";
 import { Jack } from "./Jack.jsx";
 
-const CardDiv = styled.div`
+const CardDiv = styled.div<{ holdable?: boolean }>`
   background: white;
   border: black solid 4px;
   border-radius: 20px;
   height: 200px;
   width: 123px;
   display: grid;
+  ${(p) => p.holdable && "cursor: pointer;"}
 `;
 
 const TextSpan = styled.span`
@@ -50,11 +51,11 @@ const GFace = ({ value }: { value: number }) => {
 
   switch (value) {
     case 13:
-      return <img src={King} />;
+      return <img src={King} alt="" />;
     case 12:
-      return <img src={Queen} />;
+      return <img src={Queen} alt="" />;
     case 11:
-      return <Jack />;
+      return <Jack style={{ width: "100%" }} />;
     case 2:
       if (variant === VARIANT.DEUCES_WILD) {
         return (
@@ -76,9 +77,15 @@ const GFace = ({ value }: { value: number }) => {
 export const GCard = ({
   card,
   editable,
+  holdable,
+  hold,
+  holdCallback,
 }: {
   card: Card;
-  editable: boolean;
+  editable?: boolean;
+  holdable?: boolean;
+  hold?: boolean;
+  holdCallback?: () => void;
 }): ReactElement => {
   const { value, suit } = card;
   const suitSymbol = gSuit[suit];
@@ -86,11 +93,12 @@ export const GCard = ({
   const cardValue = valueToFaceCard(value);
 
   return (
-    <CardDiv>
+    <CardDiv onClick={holdCallback} holdable={holdable}>
       <TextSpan style={{ color: suitColor }}>
         {cardValue}
         {suitSymbol}
         <GFace value={card.value} />
+        {holdable && hold && "HOLD"}
       </TextSpan>
     </CardDiv>
   );

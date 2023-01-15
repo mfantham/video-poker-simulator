@@ -5,31 +5,34 @@ import { Hand } from "../types/hand";
 import { deal } from "../mechanics/deal";
 import { VARIANT } from "../types/variant";
 import { indexOfCombination } from "../strategy/combinations";
-
-enum Stages {
-  PREGAME,
-  DEALING,
-  DEALT,
-  PAYING,
-  PAID,
-}
+import { Stages } from "./types";
+import { handToHandIdx } from "../utils/handToHandIdx";
+import { WinName, Payout } from "../payoutCalculations/deuces-wild/payout";
 
 interface AppState {
   variant: VARIANT;
   deck: Deck;
   coins: number;
   currentHandIdx: number;
-  held: Array<boolean>;
+  holds: Array<boolean>;
+  stage: Stages;
+  win: {
+    winId: number;
+    winAmount: number;
+    winName: string;
+  };
 }
 
-const initialDeck: Deck = deal();
+const [initialHand, initialDeck]: [Hand, Deck] = deal();
 
 export const initialState: AppState = {
   variant: VARIANT.DEUCES_WILD,
   deck: initialDeck,
   coins: 1000,
-  currentHandIdx: 0,
-  held: [false, false, false, false, false],
+  currentHandIdx: handToHandIdx(initialHand),
+  holds: [false, false, false, false, false],
+  stage: Stages.PREGAME,
+  win: { winId: 0, winAmount: 0, winName: "" },
 };
 
 export const gameSlice = createSlice({
@@ -43,6 +46,9 @@ export const gameSlice = createSlice({
     setCurrentHand: (state, { payload: hand }) => {
       const handIdx = indexOfCombination(hand);
       state.currentHandIdx = handIdx;
+    },
+    setCurrentDeck: (state, { payload: newDeck }) => {
+      state.deck = newDeck;
     },
     setVariant: (state, { payload: newVariant }) => {
       state.variant = newVariant;
@@ -59,6 +65,22 @@ export const gameSlice = createSlice({
     decrementByAmount: (state, { payload: amount }) => {
       state.coins -= amount;
     },
+    setStage: (state, { payload: stage }) => {
+      state.stage = stage;
+    },
+    resetHolds: (state) => {
+      state.holds = [false, false, false, false, false];
+    },
+    toggleHold: (state, { payload: idx }) => {
+      state.holds[idx] = !state.holds[idx];
+    },
+    setWin: (state, { payload: winId }: { payload: number }) => {
+      // @ts-ignore
+      const winAmount = Payout[winId];
+      // @ts-ignore: winId is a number, not the required enum
+      const winName = WinName[winId];
+      state.win = { winId, winAmount, winName };
+    },
   },
 });
 
@@ -69,4 +91,9 @@ export const {
   setVariant,
   setCurrentHand,
   setCurrentHandIdx,
+  setCurrentDeck,
+  setStage,
+  resetHolds,
+  toggleHold,
+  setWin,
 } = gameSlice.actions;
