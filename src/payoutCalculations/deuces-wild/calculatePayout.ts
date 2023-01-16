@@ -1,5 +1,5 @@
 import { Hand } from "../../types/hand";
-import { Payout, WIN_ENCODING, WinName } from "./payout";
+import { Payout, WIN_ENCODING, WinNames } from "./payout";
 import { OptimizedHandCalculator } from "./OptimizedHandCalculator";
 import { precomputePayout } from "./precomputePayout";
 import { allPossibleHands } from "../../strategy/allPossibleHands";
@@ -80,7 +80,7 @@ export const calculateWins = (hand: Hand) => {
 
 export const calculateNamedWins = (hand: Hand) => {
   const winEncoding = calculateWins(hand);
-  return WinName[winEncoding];
+  return WinNames[winEncoding];
 };
 
 export const calculatePayout = async (hand: Hand) => {

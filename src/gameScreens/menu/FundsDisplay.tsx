@@ -1,4 +1,4 @@
-import { useCoins } from "../redux/hooks";
+import { useCoins } from "../../redux/hooks";
 
 export const FundsDisplay = () => {
   const coins = useCoins();

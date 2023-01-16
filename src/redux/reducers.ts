@@ -7,7 +7,7 @@ import { VARIANT } from "../types/variant";
 import { indexOfCombination } from "../strategy/combinations";
 import { Stages } from "./types";
 import { handToHandIdx } from "../utils/handToHandIdx";
-import { WinName, Payout } from "../payoutCalculations/deuces-wild/payout";
+import { winName, payout } from "../payoutCalculations";
 import { handIdxToHand } from "../utils/handIdxToHand";
 
 interface AppState {
@@ -81,10 +81,10 @@ export const gameSlice = createSlice({
     },
     setWin: (state, { payload: winId }: { payload: number }) => {
       // @ts-ignore
-      const winAmount = Payout[winId];
+      const winAmount = payout(winId, state.variant);
       // @ts-ignore: winId is a number, not the required enum
-      const winName = WinName[winId];
-      state.win = { winId, winAmount, winName };
+      const name = winName(winId, state.variant);
+      state.win = { winId, winAmount, winName: name };
     },
   },
 });

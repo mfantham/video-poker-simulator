@@ -12,7 +12,7 @@ export enum WIN_ENCODING {
   DEFAULT = 0,
 }
 
-export const WinName = {
+export const WinNames = {
   [WIN_ENCODING.NATURAL_ROYAL_FLUSH]: "Natural Royal Flush",
   [WIN_ENCODING.FOUR_DEUCES]: "Four Deuces",
   [WIN_ENCODING.ROYAL_FLUSH]: "Wild royal Flush",

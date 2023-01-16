@@ -1,5 +1,5 @@
-import { Stages } from "../redux/types";
-import { useStage, useWin } from "../redux/hooks";
+import { Stages } from "../../redux/types";
+import { useStage, useWin } from "../../redux/hooks";
 
 export const GameStatus = () => {
   const stage = useStage();
