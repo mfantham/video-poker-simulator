@@ -24,7 +24,6 @@ export const PlayDeucesWild = () => {
 
   return (
     <GameDiv>
-      <div>wild in the west.</div>
       <GameStatus />
       <GHand hand={hand} editable={false} holdable={stage === Stages.DEALT} />
       <MenuBar />

@@ -36,8 +36,10 @@ export const DealButton = () => {
     setCurrentDeck(deck);
     setCurrentHand(newDeal);
     decrementCoins(1); // TODO: add bet size
+    const winId = calculateWins(newDeal);
+    setWin(winId); // At this stage, we don't pay out.
     setStage(Stages.DEALT);
-  }, [decrementCoins, setCurrentDeck, setCurrentHand, setStage]);
+  }, [decrementCoins, setCurrentDeck, setCurrentHand, setStage, setWin]);
 
   const handleDraw = useCallback(() => {
     // Replace hand with n-new-cards
@@ -54,7 +56,7 @@ export const DealButton = () => {
     resetHolds();
     const winId = calculateWins(newHand);
     setWin(winId);
-    incrementCoins(Payout[winId]);
+    incrementCoins(Payout[winId]); // TODO: scale by bet size
     setStage(Stages.PAYING);
   }, [
     currentDeck,

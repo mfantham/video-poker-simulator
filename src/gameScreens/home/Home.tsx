@@ -3,6 +3,7 @@ import { AppBar, Box, Drawer, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { NavBar } from "./NavBar";
 import { GameSelection } from "./GameSelection";
+import { AppbarContents } from "./AppbarContents";
 const drawerWidth = 240;
 
 export const Home = () => {
@@ -31,7 +32,7 @@ export const Home = () => {
           >
             <MenuIcon />
           </IconButton>
-          Video poker
+          <AppbarContents />
         </Toolbar>
       </AppBar>
       <Box

@@ -9,7 +9,7 @@ export const GameStatus = () => {
     case Stages.PREGAME:
       return <div>Click Deal to start</div>;
     case Stages.DEALT:
-      return <div>Select holds then Draw to continue</div>;
+      return <div>{winAmount > 0 ? <>{winName}</> : <>&nbsp;</>}</div>;
     case Stages.PAYING:
       if (winAmount) {
         return (
@@ -22,5 +22,5 @@ export const GameStatus = () => {
       }
   }
 
-  return <div>{}</div>;
+  return <div> </div>;
 };
