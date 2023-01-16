@@ -1,12 +1,13 @@
 import { GameVariant } from "../../../types/GameVariant";
 import { DeucesWildTitle } from "./DeucesWildTitle";
+import { JacksOrBetterTitle } from "./JacksOrBetterTitle";
 
 const SelectorTitle = ({ variant }: { variant: GameVariant }) => {
   switch (variant) {
     case GameVariant.DEUCES_WILD:
       return <DeucesWildTitle />;
     case GameVariant.JACKS_OR_BETTER:
-      return <></>;
+      return <JacksOrBetterTitle />;
     default:
       return <></>;
   }

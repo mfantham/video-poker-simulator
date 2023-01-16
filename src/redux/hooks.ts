@@ -27,11 +27,8 @@ export const useSetStage = () => {
   );
 };
 
-export const useCurrentHand = () => {
-  const currentHandIdx = useAppSelector((state) => state.game.currentHandIdx);
-  const currentHand = handIdxToHand(currentHandIdx);
-  return currentHand;
-};
+export const useCurrentHand = () =>
+  useAppSelector((state) => state.game.currentHand);
 
 export const useCurrentHandIdx = () =>
   useAppSelector((state) => state.game.currentHandIdx);
@@ -42,8 +39,7 @@ export const useSetCurrentHand = () => {
 
   return useCallback(
     (hand: Hand) => {
-      const handIndexes = hand.map((card) => card.idx);
-      dispatch(setCurrentHand(handIndexes));
+      dispatch(setCurrentHand(hand));
     },
     [dispatch]
   );

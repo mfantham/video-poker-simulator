@@ -1,9 +1,9 @@
-import { Hand } from "../types/hand";
 import { getPaytable as getPaytableJacks } from "../payoutCalculations/jacks-or-better/calculatePayout";
 import { getPaytable as getPaytableDeuces } from "../payoutCalculations/deuces-wild/calculatePayout";
 import { HoldsTable } from "../types/Hold";
 import { runGpuAnalysis } from "../webgpu/runGpuAnalysis";
 import { VARIANT } from "../types/variant";
+import { intToHoldString } from "../utils/intToHoldString";
 
 export const evaluateHand = async (
   handIndex: number,
@@ -35,14 +35,13 @@ export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
     const totalSwaps = gpuAnalysisResult.totalSwaps[holdId];
     const totalWins = gpuAnalysisResult.totalWins[holdId];
     const maxPayout = gpuAnalysisResult.maxPayout[holdId];
-    const holdName = holdId.toString(2).padStart(5, "0");
+    const holdName = intToHoldString(holdId);
 
     return {
       holdName,
       expectedPayout: totalPayout / totalSwaps,
       winProbability: (100 * totalWins) / totalSwaps,
       maxPossiblePayout: maxPayout,
-      fiveX: (5 * totalPayout) / totalSwaps,
     };
   });
 

@@ -3,6 +3,7 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import { SelectorSVG } from "./selectors/SelectorSVG";
 import { GameVariant } from "../../types/GameVariant";
 import { PlayDeucesWild } from "../PlayDeucesWild";
+import { HandExplorer } from "../analysis/HandExplorer";
 
 const Selector = ({
   route,
@@ -62,6 +63,7 @@ export const GameSelection = () => {
           path="triple"
           element={<GameSelectors multiOption={"triplePlay"} />}
         />
+        <Route path="analysis" element={<HandExplorer />} />
       </Routes>
     </Grid2>
   );

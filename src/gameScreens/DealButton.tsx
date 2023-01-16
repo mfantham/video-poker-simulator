@@ -33,6 +33,7 @@ export const DealButton = () => {
 
   const handleDeal = useCallback(() => {
     const [newDeal, deck] = deal();
+    console.log(newDeal);
     setCurrentDeck(deck);
     setCurrentHand(newDeal);
     decrementCoins(1); // TODO: add bet size

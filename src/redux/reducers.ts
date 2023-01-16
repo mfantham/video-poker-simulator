@@ -8,11 +8,13 @@ import { indexOfCombination } from "../strategy/combinations";
 import { Stages } from "./types";
 import { handToHandIdx } from "../utils/handToHandIdx";
 import { WinName, Payout } from "../payoutCalculations/deuces-wild/payout";
+import { handIdxToHand } from "../utils/handIdxToHand";
 
 interface AppState {
   variant: VARIANT;
   deck: Deck;
   coins: number;
+  currentHand: Hand;
   currentHandIdx: number;
   holds: Array<boolean>;
   stage: Stages;
@@ -30,6 +32,7 @@ export const initialState: AppState = {
   deck: initialDeck,
   coins: 1000,
   currentHandIdx: handToHandIdx(initialHand),
+  currentHand: initialHand,
   holds: [false, false, false, false, false],
   stage: Stages.PREGAME,
   win: { winId: 0, winAmount: 0, winName: "" },
@@ -42,9 +45,11 @@ export const gameSlice = createSlice({
   reducers: {
     setCurrentHandIdx: (state, { payload: newHandIdx }) => {
       state.currentHandIdx = newHandIdx;
+      state.currentHand = handIdxToHand(newHandIdx);
     },
     setCurrentHand: (state, { payload: hand }) => {
       const handIdx = indexOfCombination(hand);
+      state.currentHand = hand;
       state.currentHandIdx = handIdx;
     },
     setCurrentDeck: (state, { payload: newDeck }) => {

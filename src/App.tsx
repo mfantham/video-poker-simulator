@@ -4,7 +4,7 @@ import "./App.css";
 import { fetchPaytable } from "./payoutCalculations/jacks-or-better/calculatePayout";
 import { Route, Routes } from "react-router-dom";
 import { Home } from "./gameScreens/home/Home";
-import { HandExplorer } from "./gameScreens/HandExplorer";
+import { HandExplorer } from "./gameScreens/analysis/HandExplorer";
 
 function App() {
   // Prefetch paytables
@@ -16,7 +16,6 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Routes>
-          <Route path="/analysis" element={<HandExplorer />} />
           <Route path="/*" element={<Home />} />
         </Routes>
       </header>

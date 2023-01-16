@@ -4,4 +4,6 @@ export enum Stages {
   DEALT,
   PAYING,
   PAID,
+  MENUS,
+  EXPLORER,
 }
