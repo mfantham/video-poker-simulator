@@ -28,6 +28,7 @@ interface AppState {
     winAmount: number;
     winName: string;
   };
+  showAnalysis: boolean;
 }
 
 const [initialHand, initialDeck]: [Hand, Deck] = deal();
@@ -43,6 +44,7 @@ export const initialState: AppState = {
   holds: [false, false, false, false, false],
   stage: Stages.PREGAME,
   win: { winId: 0, winAmount: 0, winName: "" },
+  showAnalysis: false,
 };
 
 export const gameSlice = createSlice({
@@ -110,6 +112,9 @@ export const gameSlice = createSlice({
       const newCPBIndex = (currentCPBIndex + 1) % COINS_PER_BET_ORDER.length;
       state.coinsPerBet = COINS_PER_BET_ORDER[newCPBIndex];
     },
+    toggleShowAnalysis: (state) => {
+      state.showAnalysis = !state.showAnalysis;
+    },
   },
 });
 
@@ -128,4 +133,5 @@ export const {
   setMaxBet,
   incrementBet,
   incrementCoinsPerBet,
+  toggleShowAnalysis,
 } = gameSlice.actions;

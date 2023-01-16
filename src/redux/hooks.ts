@@ -15,6 +15,7 @@ import {
   setVariant,
   setWin,
   toggleHold,
+  toggleShowAnalysis,
 } from "./reducers";
 import { Hand } from "../types/hand";
 import { Stages } from "./types";
@@ -133,3 +134,12 @@ export const useIncrementCoinsPerBet = () => {
 
   return useCallback(() => dispatch(incrementCoinsPerBet()), [dispatch]);
 };
+
+export const useToggleShowAnalysis = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(toggleShowAnalysis()), [dispatch]);
+};
+
+export const useShowAnalysis = () =>
+  useAppSelector((state) => state.game.showAnalysis);

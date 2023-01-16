@@ -1,6 +1,6 @@
 import React from "react";
-import { HoldsTable } from "../types/Hold";
-import { intToHoldString } from "./intToHoldString";
+import { HoldsTable } from "../../types/Hold";
+import { intToHoldString } from "../../utils/intToHoldString";
 
 const DEFAULT_HOLDS_LENGTH = 32;
 

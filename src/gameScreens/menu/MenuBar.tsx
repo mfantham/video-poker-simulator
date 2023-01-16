@@ -3,6 +3,7 @@ import { DealButton } from "./DealButton";
 import { FundsDisplay } from "./FundsDisplay";
 import { BetDisplay } from "./BetDisplay";
 import { BetIncrementButtons } from "./BetIncrementButtons";
+import { ShowAnalysisButton } from "./ShowAnalysisButton";
 
 export const MenuBarDiv = styled.div`
   position: fixed;
@@ -19,6 +20,7 @@ export const MenuBar = () => {
     <MenuBarDiv>
       <DealButton />
       <BetIncrementButtons />
+      <ShowAnalysisButton />
       <BetDisplay />
       <FundsDisplay />
     </MenuBarDiv>
