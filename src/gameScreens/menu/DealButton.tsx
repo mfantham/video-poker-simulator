@@ -1,6 +1,8 @@
 import { Stages } from "../../redux/types";
 import React, { useCallback } from "react";
 import {
+  useBetSize,
+  useCoinsPerBet,
   useCurrentHand,
   useDeck,
   useDecrement,
@@ -31,16 +33,20 @@ export const DealButton = () => {
   const holds = useHolds();
   const setWin = useSetWin();
   const variant = useVariant();
+  const betSize = useBetSize();
+  const coinsPerBet = useCoinsPerBet();
 
   const handleDeal = useCallback(() => {
     const [newDeal, deck] = deal();
     setCurrentDeck(deck);
     setCurrentHand(newDeal);
-    decrementCoins(1); // TODO: add bet size
+    decrementCoins(betSize * coinsPerBet);
     const winId = calculateWins(newDeal, variant);
     setWin(winId); // At this stage, we don't pay out. Any win-on-the-deal is for player info only
     setStage(Stages.DEALT);
   }, [
+    betSize,
+    coinsPerBet,
     decrementCoins,
     setCurrentDeck,
     setCurrentHand,
@@ -64,9 +70,12 @@ export const DealButton = () => {
     resetHolds();
     const winId = calculateWins(newHand, variant);
     setWin(winId);
-    incrementCoins(payout(winId, variant)); // TODO: scale by bet size
+    const winPayout = payout(winId, variant) * betSize * coinsPerBet;
+    incrementCoins(winPayout);
     setStage(Stages.PAYING);
   }, [
+    betSize,
+    coinsPerBet,
     currentDeck,
     currentHand,
     holds,

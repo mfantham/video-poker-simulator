@@ -3,11 +3,14 @@ import { useCallback } from "react";
 import { VARIANT } from "../types/variant";
 import {
   decrementByAmount,
+  incrementBet,
   incrementByAmount,
+  incrementCoinsPerBet,
   resetHolds,
   setCurrentDeck,
   setCurrentHand,
   setCurrentHandIdx,
+  setMaxBet,
   setStage,
   setVariant,
   setWin,
@@ -110,3 +113,23 @@ export const useSetWin = () => {
 };
 
 export const useWin = () => useAppSelector((state) => state.game.win);
+
+export const useBetSize = () => useAppSelector((state) => state.game.betSize);
+export const useCoinsPerBet = () =>
+  useAppSelector((state) => state.game.coinsPerBet);
+
+export const useSetMaxBet = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(setMaxBet()), [dispatch]);
+};
+export const useIncrementBet = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(incrementBet()), [dispatch]);
+};
+export const useIncrementCoinsPerBet = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(incrementCoinsPerBet()), [dispatch]);
+};

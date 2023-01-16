@@ -5,6 +5,8 @@ import { GameVariant } from "../../types/GameVariant";
 import { PlayDeucesWild } from "../games/PlayDeucesWild";
 import { HandExplorer } from "../analysis/HandExplorer";
 import { PlayJacks } from "../games/PlayJacks";
+import { MenuBarDiv } from "../menu/MenuBar";
+import { CoinsPerBetButton } from "./CoinsPerBetButton";
 
 const Selector = ({
   route,
@@ -47,7 +49,14 @@ const GameSelectors = ({
       <Selector route={game.route} variant={game.variant} key={game.route} />
     );
   });
-  return <>{selectors}</>;
+  return (
+    <>
+      {selectors}
+      <MenuBarDiv>
+        <CoinsPerBetButton />
+      </MenuBarDiv>
+    </>
+  );
 };
 
 export const GameSelection = () => {

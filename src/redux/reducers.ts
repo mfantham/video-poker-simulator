@@ -10,10 +10,15 @@ import { handToHandIdx } from "../utils/handToHandIdx";
 import { winName, payout } from "../payoutCalculations";
 import { handIdxToHand } from "../utils/handIdxToHand";
 
+const MAX_BET = 5;
+const COINS_PER_BET_ORDER = [0.25, 0.5, 1, 2, 5];
+
 interface AppState {
   variant: VARIANT;
   deck: Deck;
   coins: number;
+  betSize: number;
+  coinsPerBet: number;
   currentHand: Hand;
   currentHandIdx: number;
   holds: Array<boolean>;
@@ -31,6 +36,8 @@ export const initialState: AppState = {
   variant: VARIANT.DEUCES_WILD,
   deck: initialDeck,
   coins: 1000,
+  betSize: 1,
+  coinsPerBet: 1,
   currentHandIdx: handToHandIdx(initialHand),
   currentHand: initialHand,
   holds: [false, false, false, false, false],
@@ -86,6 +93,23 @@ export const gameSlice = createSlice({
       const name = winName(winId, state.variant);
       state.win = { winId, winAmount, winName: name };
     },
+    incrementBet: (state) => {
+      const incremented = state.betSize + 1;
+      if (incremented > MAX_BET) {
+        state.betSize = 1;
+      } else {
+        state.betSize = incremented;
+      }
+    },
+    setMaxBet: (state) => {
+      state.betSize = MAX_BET;
+    },
+    incrementCoinsPerBet: (state) => {
+      const currentCPBIndex =
+        COINS_PER_BET_ORDER.indexOf(state.coinsPerBet) ?? 0;
+      const newCPBIndex = (currentCPBIndex + 1) % COINS_PER_BET_ORDER.length;
+      state.coinsPerBet = COINS_PER_BET_ORDER[newCPBIndex];
+    },
   },
 });
 
@@ -101,4 +125,7 @@ export const {
   resetHolds,
   toggleHold,
   setWin,
+  setMaxBet,
+  incrementBet,
+  incrementCoinsPerBet,
 } = gameSlice.actions;
