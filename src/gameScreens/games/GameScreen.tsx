@@ -1,10 +1,16 @@
 import styled from "styled-components";
 import { Stages } from "../../redux/types";
 import React, { useEffect } from "react";
-import { useCurrentHand, useSetStage, useStage } from "../../redux/hooks";
+import {
+  useBetSize,
+  useCurrentHand,
+  useSetStage,
+  useStage,
+} from "../../redux/hooks";
 import { GHand } from "../../graphics/gHand";
 import { MenuBar } from "../menu/MenuBar";
 import { GameStatus } from "../menu/GameStatus";
+import { PayTable } from "../analysis/PayTable";
 
 const GameDiv = styled.div`
   display: flex;
@@ -24,6 +30,7 @@ export const GameScreen = () => {
 
   return (
     <GameDiv>
+      <PayTable />
       <GameStatus />
       <GHand hand={hand} editable={false} holdable={stage === Stages.DEALT} />
       <MenuBar />
