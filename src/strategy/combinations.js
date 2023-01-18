@@ -51,7 +51,7 @@ export const indexOfCombination = (combination) => {
   // Combination is an array of integers, length r
   // Note we need to sort the list in this function!
   let index = 0;
-  const sorted = combination.sort((a, b) => a - b); // sort low-high. ffs.
+  const sorted = [...combination].sort((a, b) => a - b);
   sorted.forEach((ck, i) => {
     index += choose(ck, i + 1);
   });

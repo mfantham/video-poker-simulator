@@ -61,7 +61,7 @@ export const HandExplorer = () => {
         </WinNameHolder>
       </AnalysisHeaderHolder>
       <GHand hand={hand} editable={true} />
-      <AnalysisTable showTime={true} />
+      <AnalysisTable showTime={true} handIdx={handIdx} />
     </AnalysisPageHolder>
   );
 };

@@ -1,9 +1,8 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Stages } from "../../redux/types";
-import React, { useEffect } from "react";
 import {
-  useBetSize,
-  useCurrentHand,
+  useFullHand,
   useSetStage,
   useShowAnalysis,
   useStage,
@@ -13,6 +12,7 @@ import { MenuBar } from "../menu/MenuBar";
 import { GameStatus } from "../menu/GameStatus";
 import { PayTable } from "../analysis/PayTable";
 import { AnalysisTable } from "../analysis/AnalysisTable";
+import { SortIndex } from "../../types/SortIndex";
 
 const GameDiv = styled.div`
   display: flex;
@@ -24,8 +24,20 @@ const GameDiv = styled.div`
 export const GameScreen = () => {
   const setStage = useSetStage();
   const stage = useStage();
-  const hand = useCurrentHand();
+  const { hand, handIdx, handSortOrder } = useFullHand();
   const showAnalysis = useShowAnalysis();
+
+  const [analysisHandIdx, setAnalysisHandIdx] = useState<number>(handIdx);
+  const [analysisHandSortOrder, setAnalysisHandSortOrder] =
+    useState<SortIndex>(handSortOrder);
+
+  useEffect(() => {
+    if (stage === Stages.DEALT) {
+      // Only update analysis table on deal
+      setAnalysisHandIdx(handIdx);
+      setAnalysisHandSortOrder(handSortOrder);
+    }
+  }, [stage, handIdx, handSortOrder]);
 
   useEffect(() => {
     setStage(Stages.PREGAME);
@@ -36,7 +48,12 @@ export const GameScreen = () => {
       <PayTable />
       <GameStatus />
       <GHand hand={hand} editable={false} holdable={stage === Stages.DEALT} />
-      {showAnalysis && <AnalysisTable />}
+      {showAnalysis && (
+        <AnalysisTable
+          handIdx={analysisHandIdx}
+          handSortOrder={analysisHandSortOrder}
+        />
+      )}
       <MenuBar />
     </GameDiv>
   );

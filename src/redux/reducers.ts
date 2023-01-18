@@ -4,11 +4,11 @@ import { Deck } from "../types/deck";
 import { Hand } from "../types/hand";
 import { deal } from "../mechanics/deal";
 import { VARIANT } from "../types/variant";
-import { indexOfCombination } from "../strategy/combinations";
 import { Stages } from "./types";
 import { handToHandIdx } from "../utils/handToHandIdx";
 import { winName, payout } from "../payoutCalculations";
 import { handIdxToHand } from "../utils/handIdxToHand";
+import { sortHand } from "../utils/sortHand";
 
 const MAX_BET = 5;
 const COINS_PER_BET_ORDER = [0.25, 0.5, 1, 2, 5];
@@ -19,8 +19,12 @@ interface AppState {
   coins: number;
   betSize: number;
   coinsPerBet: number;
-  currentHand: Hand;
-  currentHandIdx: number;
+  currentHand: {
+    hand: Hand;
+    handIdx: number;
+    sortedHand: Hand;
+    handSortOrder: [number, number, number, number, number];
+  };
   holds: Array<boolean>;
   stage: Stages;
   win: {
@@ -32,6 +36,8 @@ interface AppState {
 }
 
 const [initialHand, initialDeck]: [Hand, Deck] = deal();
+const { sortedHand: initialHandSorted, sortIndex: initialHandSortOrder } =
+  sortHand(initialHand);
 
 export const initialState: AppState = {
   variant: VARIANT.DEUCES_WILD,
@@ -39,8 +45,12 @@ export const initialState: AppState = {
   coins: 1000,
   betSize: 1,
   coinsPerBet: 1,
-  currentHandIdx: handToHandIdx(initialHand),
-  currentHand: initialHand,
+  currentHand: {
+    hand: initialHand,
+    handIdx: handToHandIdx(initialHand),
+    sortedHand: initialHandSorted,
+    handSortOrder: initialHandSortOrder,
+  },
   holds: [false, false, false, false, false],
   stage: Stages.PREGAME,
   win: { winId: 0, winAmount: 0, winName: "" },
@@ -53,13 +63,23 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     setCurrentHandIdx: (state, { payload: newHandIdx }) => {
-      state.currentHandIdx = newHandIdx;
-      state.currentHand = handIdxToHand(newHandIdx);
+      state.currentHand.handIdx = newHandIdx;
+      state.currentHand.hand = handIdxToHand(newHandIdx);
+      const { sortedHand, sortIndex } = sortHand(state.currentHand.hand);
+      state.currentHand.sortedHand = sortedHand;
+      state.currentHand.handSortOrder = sortIndex;
     },
     setCurrentHand: (state, { payload: hand }) => {
-      const handIdx = indexOfCombination(hand);
-      state.currentHand = hand;
-      state.currentHandIdx = handIdx;
+      state.currentHand.hand = hand;
+      state.currentHand.handIdx = handToHandIdx(hand);
+      const { sortedHand, sortIndex } = sortHand(state.currentHand.hand);
+      state.currentHand.sortedHand = sortedHand;
+      state.currentHand.handSortOrder = sortIndex;
+      console.log(
+        state.currentHand.hand,
+        state.currentHand.sortedHand,
+        sortIndex
+      );
     },
     setCurrentDeck: (state, { payload: newDeck }) => {
       state.deck = newDeck;

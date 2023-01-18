@@ -19,7 +19,6 @@ import {
 } from "./reducers";
 import { Hand } from "../types/hand";
 import { Stages } from "./types";
-import { handIdxToHand } from "../utils/handIdxToHand";
 import { Deck } from "../types/deck";
 
 export const useStage = () => useAppSelector((state) => state.game.stage);
@@ -32,10 +31,13 @@ export const useSetStage = () => {
 };
 
 export const useCurrentHand = () =>
+  useAppSelector((state) => state.game.currentHand.hand);
+
+export const useFullHand = () =>
   useAppSelector((state) => state.game.currentHand);
 
 export const useCurrentHandIdx = () =>
-  useAppSelector((state) => state.game.currentHandIdx);
+  useAppSelector((state) => state.game.currentHand.handIdx);
 export const useVariant = () => useAppSelector((state) => state.game.variant);
 
 export const useSetCurrentHand = () => {
