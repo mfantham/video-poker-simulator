@@ -4,6 +4,7 @@ import { evaluateHand } from "../../strategy/evaluateHand";
 import { HoldsTable } from "../../types/Hold";
 import { useVariant } from "../../redux/hooks";
 import { SortIndex } from "../../types/SortIndex";
+import { handIdxToHand } from "../../utils/handIdxToHand";
 
 const AnalysisTime = ({ showTime = false, analysisTime = 0 }) => {
   if (!showTime) return null;
@@ -23,6 +24,7 @@ export const AnalysisTable = ({
   handSortOrder?: SortIndex;
 }) => {
   const variant = useVariant();
+  const sortedHand = handIdxToHand(handIdx);
 
   const [analysis, setAnalysis] = useState([] as HoldsTable);
   const [analysisTime, setAnalysisTime] = useState(0);
@@ -43,6 +45,7 @@ export const AnalysisTable = ({
       <PrettyPrintAnalysis
         analysisTable={analysis}
         holdsOrder={handSortOrder}
+        sortedHand={sortedHand}
       />
       <AnalysisTime showTime={showTime} analysisTime={analysisTime} />
     </>

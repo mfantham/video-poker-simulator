@@ -3,25 +3,33 @@ import { GCard } from "./gCard";
 import styled from "styled-components";
 import { useHolds, useStage, useToggleHold } from "../redux/hooks";
 import { Stages } from "../redux/types";
+import { HidePattern } from "../types/HidePattern";
 
-const HandHolder = styled.div`
+const HandHolder = styled.div<{ mini: boolean }>`
   display: flex;
-  gap: 10px;
+  gap: ${(p) => (p.mini ? "2px" : "10px")};
 `;
 
 export const GHand = ({
   hand,
   editable = false,
   holdable = false,
+  hide = [false, false, false, false, false],
+  mini = false,
 }: {
   hand: Hand;
   editable?: boolean;
   holdable?: boolean;
+  hide?: HidePattern;
+  mini?: boolean;
 }) => {
   const toggleHold = useToggleHold();
   const holds = useHolds();
   const stage = useStage();
   const hidden = stage === Stages.PREGAME;
+  if (hidden) {
+    hide = [true, true, true, true, true];
+  }
 
   const cards = hand.map((card, idx) => {
     const holdCallback = (idx: number) => {
@@ -31,8 +39,9 @@ export const GHand = ({
     return (
       <GCard
         key={idx}
+        mini={mini}
         card={card}
-        hidden={hidden}
+        hidden={hide[idx]}
         editable={editable}
         holdable={holdable}
         hold={holds[idx]}
@@ -40,5 +49,5 @@ export const GHand = ({
       />
     );
   });
-  return <HandHolder>{cards}</HandHolder>;
+  return <HandHolder mini={mini}>{cards}</HandHolder>;
 };

@@ -8,6 +8,7 @@ import Select from "react-select";
 import King from "./King.svg";
 import Queen from "./Queen.svg";
 import { Jack } from "./Jack.jsx";
+import { GCardMini } from "./gCardMini";
 
 const CardDiv = styled.div<{ holdable?: boolean }>`
   background: white;
@@ -99,6 +100,7 @@ export const GCard = ({
   hold,
   holdCallback,
   hidden,
+  mini,
 }: {
   card: Card;
   editable?: boolean;
@@ -106,11 +108,24 @@ export const GCard = ({
   hold?: boolean;
   holdCallback?: () => void;
   hidden?: boolean;
+  mini?: boolean;
 }): ReactElement => {
   const { value, suit } = card;
   const suitSymbol = gSuit[suit];
   const suitColor = cSuit[suit];
   const cardValue = valueToFaceCard(value);
+
+  if (mini) {
+    return (
+      <GCardMini
+        card={card}
+        holdable={holdable}
+        hold={hold}
+        hidden={hidden}
+        holdCallback={holdCallback}
+      />
+    );
+  }
 
   return (
     <CardDiv onClick={holdCallback} holdable={holdable}>
