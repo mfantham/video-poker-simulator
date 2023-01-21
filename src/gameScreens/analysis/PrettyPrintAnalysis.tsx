@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { HoldsTable } from "../../types/Hold";
 import { intToHoldString } from "../../utils/intToHoldString";
 import { SortIndex } from "../../types/SortIndex";
@@ -6,6 +8,24 @@ import { GHand } from "../../graphics/gHand";
 import { HidePattern } from "../../types/HidePattern";
 
 const DEFAULT_HOLDS_LENGTH = 32;
+
+const TableHolder = styled.div`
+  overflow: auto;
+  border-radius: 20px;
+`;
+
+const TableHead = styled.thead`
+  font-size: 24px;
+  margin-bottom: 100px;
+`;
+
+const TH = styled.th`
+  padding: 0 5px;
+  position: sticky;
+  top: 0; // Required for the stickiness
+  backdrop-filter: blur(10px);
+  z-index: 3;
+`;
 
 const HoldsDisplay = ({
   holdPattern,
@@ -75,16 +95,18 @@ export const PrettyPrintAnalysis = ({
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Hold</th>
-          <th>Expected win (coins)</th>
-          <th>Chance of win %</th>
-          <th>Max possible win</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+    <TableHolder>
+      <table>
+        <TableHead>
+          <tr>
+            <TH>Hold</TH>
+            <TH>Expected win (coins)</TH>
+            <TH>Chance of win %</TH>
+            <TH>Max possible win</TH>
+          </tr>
+        </TableHead>
+        <tbody>{rows}</tbody>
+      </table>
+    </TableHolder>
   );
 };

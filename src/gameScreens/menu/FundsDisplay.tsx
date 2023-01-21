@@ -5,6 +5,7 @@ import { useCoins, useCoinsPerBet } from "../../redux/hooks";
 const FundsDisplayHolder = styled.div`
   cursor: pointer;
   user-select: none;
+  text-align: right;
 `;
 
 export const FundsDisplay = () => {

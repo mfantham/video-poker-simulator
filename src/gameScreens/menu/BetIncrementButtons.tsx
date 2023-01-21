@@ -1,5 +1,6 @@
 import { useIncrementBet, useSetMaxBet, useStage } from "../../redux/hooks";
 import { Stages } from "../../redux/types";
+import { MenuButton } from "./MenuButton";
 
 export const BetIncrementButtons = () => {
   const incrementBet = useIncrementBet();
@@ -10,12 +11,12 @@ export const BetIncrementButtons = () => {
 
   return (
     <>
-      <button disabled={!enabled} onClick={incrementBet}>
+      <MenuButton disabled={!enabled} onClick={incrementBet}>
         bet one
-      </button>
-      <button disabled={!enabled} onClick={setMaxBet}>
+      </MenuButton>
+      <MenuButton disabled={!enabled} onClick={setMaxBet}>
         bet max
-      </button>
+      </MenuButton>
     </>
   );
 };

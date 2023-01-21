@@ -81,7 +81,8 @@ export const Home = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          position: "fixed",
+          inset: `64px 0 0 ${drawerWidth}px`,
         }}
       >
         <Toolbar />

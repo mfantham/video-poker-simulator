@@ -1,12 +1,13 @@
 import { useShowAnalysis, useToggleShowAnalysis } from "../../redux/hooks";
+import { MenuButton } from "./MenuButton";
 
 export const ShowAnalysisButton = () => {
   const showAnalysis = useShowAnalysis();
   const toggleShowAnalysis = useToggleShowAnalysis();
 
   return (
-    <button onClick={toggleShowAnalysis}>
-      {showAnalysis ? "hide" : "show"} analysis
-    </button>
+    <MenuButton onClick={toggleShowAnalysis} lockedOn={showAnalysis}>
+      analysis
+    </MenuButton>
   );
 };

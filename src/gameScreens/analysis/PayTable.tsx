@@ -13,21 +13,38 @@ const PayTableElement = styled.div`
   font-size: 16px;
 `;
 
+const HighlightColumn = styled.div<{ column: number; length: number }>`
+  grid-column: ${(p) => `${p.column}/${p.column + 1}`};
+  grid-row: 1 / ${(p) => p.length + 1};
+  background: linear-gradient(155deg, #ff0000cc, #ff000077);
+  z-index: 1;
+`;
+
 export const PayTable = () => {
   const variant = useVariant();
   const nameWinTable = paytable(variant);
   const betSize = useBetSize();
 
-  const rows = nameWinTable.map((row) => {
+  const rows = nameWinTable.map((row, rowIdx) => {
     const cells = row.map((cell, idx) => {
+      if (row.includes(0)) return null;
+
       const cellStyle = {
+        margin: "-2px 5px",
         textAlign: idx === 0 ? "left" : "center",
-        background: idx === betSize ? "#ff0000aa" : "none",
+        gridColumn: `${idx + 1}/${idx + 2}`,
+        gridRow: `${rowIdx + 1}/${rowIdx + 2}`,
+        zIndex: 2,
       };
       // @ts-ignore TODO: lookup why textAlign isn't allowed
       return <div style={cellStyle}>{cell}</div>;
     });
     return <>{cells}</>;
   });
-  return <PayTableElement>{rows}</PayTableElement>;
+  return (
+    <PayTableElement>
+      {rows}
+      <HighlightColumn column={betSize + 1} length={rows.length} />
+    </PayTableElement>
+  );
 };

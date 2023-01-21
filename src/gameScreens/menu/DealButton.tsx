@@ -19,6 +19,7 @@ import {
 import { deal } from "../../mechanics/deal";
 import { Hand } from "../../types/hand";
 import { calculateWins, payout } from "../../payoutCalculations";
+import { MenuButton } from "./MenuButton";
 
 export const DealButton = () => {
   const gameStage = useStage();
@@ -88,8 +89,8 @@ export const DealButton = () => {
   ]);
 
   if (gameStage !== Stages.DEALT) {
-    return <button onClick={handleDeal}>Deal</button>;
+    return <MenuButton onClick={handleDeal}>deal</MenuButton>;
   } else {
-    return <button onClick={handleDraw}>Draw</button>;
+    return <MenuButton onClick={handleDraw}>draw</MenuButton>;
   }
 };

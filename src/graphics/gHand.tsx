@@ -8,6 +8,7 @@ import { HidePattern } from "../types/HidePattern";
 const HandHolder = styled.div<{ mini: boolean }>`
   display: flex;
   gap: ${(p) => (p.mini ? "2px" : "10px")};
+  margin: auto;
 `;
 
 export const GHand = ({

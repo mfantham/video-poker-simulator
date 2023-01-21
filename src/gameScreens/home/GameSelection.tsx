@@ -5,8 +5,14 @@ import { GameVariant } from "../../types/GameVariant";
 import { PlayDeucesWild } from "../games/PlayDeucesWild";
 import { HandExplorer } from "../analysis/HandExplorer";
 import { PlayJacks } from "../games/PlayJacks";
-import { MenuBarDiv } from "../menu/MenuBar";
+import { MenuBarButtonRow } from "../menu/MenuBar";
 import { CoinsPerBetButton } from "./CoinsPerBetButton";
+import styled from "styled-components";
+
+const PageHolder = styled.div`
+  position: absolute;
+  inset: 10px 10px 0 10px;
+`;
 
 const Selector = ({
   route,
@@ -52,16 +58,16 @@ const GameSelectors = ({
   return (
     <>
       {selectors}
-      <MenuBarDiv>
+      <MenuBarButtonRow>
         <CoinsPerBetButton />
-      </MenuBarDiv>
+      </MenuBarButtonRow>
     </>
   );
 };
 
 export const GameSelection = () => {
   return (
-    <Grid2 container spacing={5}>
+    <PageHolder>
       <Routes>
         <Route path="" element={<GameSelectors multiOption={"singlePlay"} />} />
         <Route
@@ -76,6 +82,6 @@ export const GameSelection = () => {
         />
         <Route path="analysis" element={<HandExplorer />} />
       </Routes>
-    </Grid2>
+    </PageHolder>
   );
 };

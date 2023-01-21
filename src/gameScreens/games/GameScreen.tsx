@@ -15,10 +15,11 @@ import { AnalysisTable } from "../analysis/AnalysisTable";
 import { SortIndex } from "../../types/SortIndex";
 
 const GameDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  grid-template-columns: 1fr;
 `;
 
 export const GameScreen = () => {
