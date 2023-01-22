@@ -1,16 +1,35 @@
 import styled from "styled-components";
 import { useBetSize, useVariant } from "../../redux/hooks";
 import { paytable } from "../../payoutCalculations";
+import { useCallback, useState } from "react";
 
 const PAY_COLUMN_WIDTH = "50px";
 const PAY_COLUMNS = new Array(5).fill(PAY_COLUMN_WIDTH).join(" ");
 
 const PayTableElement = styled.div`
-  width: 100%;
   display: grid;
+  width: 655px;
   border: 2px solid yellow;
   grid-template-columns: 1fr ${PAY_COLUMNS};
   font-size: 16px;
+  margin: auto;
+`;
+
+const PayStringHolder = styled.div`
+  position: relative;
+  &:not(:hover) .material-symbols-rounded {
+    display: none;
+  }
+  font-size: 24px;
+`;
+
+const ToggleCollapseButton = styled.span`
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  user-select: none;
 `;
 
 const HighlightColumn = styled.div<{ column: number; length: number }>`
@@ -24,6 +43,29 @@ export const PayTable = () => {
   const variant = useVariant();
   const nameWinTable = paytable(variant);
   const betSize = useBetSize();
+
+  const [collapse, setCollapse] = useState(true);
+  const toggleCollapse = useCallback(() => setCollapse((s) => !s), []);
+
+  if (collapse) {
+    const winsString = [...nameWinTable]
+      .reverse()
+      .map(([_, win]) => `${win ? win * betSize : ""}`)
+      .filter((x) => x)
+      .join(", ");
+    return (
+      <PayStringHolder>
+        {winsString}
+        <ToggleCollapseButton
+          className="material-symbols-rounded"
+          style={{ cursor: "pointer" }}
+          onClick={toggleCollapse}
+        >
+          add_circle
+        </ToggleCollapseButton>
+      </PayStringHolder>
+    );
+  }
 
   const rows = nameWinTable.map((row, rowIdx) => {
     const cells = row.map((cell, idx) => {
@@ -42,9 +84,18 @@ export const PayTable = () => {
     return <>{cells}</>;
   });
   return (
-    <PayTableElement>
-      {rows}
-      <HighlightColumn column={betSize + 1} length={rows.length} />
-    </PayTableElement>
+    <PayStringHolder>
+      <PayTableElement>
+        {rows}
+        <HighlightColumn column={betSize + 1} length={rows.length} />
+        <ToggleCollapseButton
+          className="material-symbols-rounded"
+          style={{ cursor: "pointer" }}
+          onClick={toggleCollapse}
+        >
+          do_not_disturb_on
+        </ToggleCollapseButton>
+      </PayTableElement>
+    </PayStringHolder>
   );
 };
