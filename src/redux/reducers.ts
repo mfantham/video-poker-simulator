@@ -9,6 +9,7 @@ import { handToHandIdx } from "../utils/handToHandIdx";
 import { winName, payout } from "../payoutCalculations";
 import { handIdxToHand } from "../utils/handIdxToHand";
 import { sortHand } from "../utils/sortHand";
+import { SortIndex } from "../types/SortIndex";
 
 const MAX_BET = 5;
 const COINS_PER_BET_ORDER = [0.25, 0.5, 1, 2, 5];
@@ -23,7 +24,13 @@ interface AppState {
     hand: Hand;
     handIdx: number;
     sortedHand: Hand;
-    handSortOrder: [number, number, number, number, number];
+    handSortOrder: SortIndex;
+  };
+  dealtHand: {
+    hand: Hand;
+    handIdx: number;
+    sortedHand: Hand;
+    handSortOrder: SortIndex;
   };
   holds: Array<boolean>;
   stage: Stages;
@@ -33,6 +40,7 @@ interface AppState {
     winName: string;
   };
   showAnalysis: boolean;
+  speed: number;
 }
 
 const [initialHand, initialDeck]: [Hand, Deck] = deal();
@@ -51,10 +59,17 @@ export const initialState: AppState = {
     sortedHand: initialHandSorted,
     handSortOrder: initialHandSortOrder,
   },
+  dealtHand: {
+    hand: initialHand,
+    handIdx: handToHandIdx(initialHand),
+    sortedHand: initialHandSorted,
+    handSortOrder: initialHandSortOrder,
+  },
   holds: [false, false, false, false, false],
   stage: Stages.PREGAME,
   win: { winId: 0, winAmount: 0, winName: "" },
   showAnalysis: false,
+  speed: 2,
 };
 
 export const gameSlice = createSlice({
@@ -75,11 +90,6 @@ export const gameSlice = createSlice({
       const { sortedHand, sortIndex } = sortHand(state.currentHand.hand);
       state.currentHand.sortedHand = sortedHand;
       state.currentHand.handSortOrder = sortIndex;
-      console.log(
-        state.currentHand.hand,
-        state.currentHand.sortedHand,
-        sortIndex
-      );
     },
     setCurrentDeck: (state, { payload: newDeck }) => {
       state.deck = newDeck;
@@ -135,6 +145,10 @@ export const gameSlice = createSlice({
     toggleShowAnalysis: (state) => {
       state.showAnalysis = !state.showAnalysis;
     },
+    incrementSpeed: (state) => {
+      console.log(state.speed, (state.speed + 1) % 4);
+      state.speed = (state.speed + 1) % 4;
+    },
   },
 });
 
@@ -154,4 +168,5 @@ export const {
   incrementBet,
   incrementCoinsPerBet,
   toggleShowAnalysis,
+  incrementSpeed,
 } = gameSlice.actions;

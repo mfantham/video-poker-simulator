@@ -11,8 +11,13 @@ export const GameStatus = () => {
     case Stages.PREGAME:
       return <div>Click Deal to start</div>;
     case Stages.DEALT:
-      return <div>{winAmount > 0 ? <>{winName}</> : <>&nbsp;</>}</div>;
+      if (winAmount > 0) {
+        dispatchEvent(new CustomEvent("win-on-the-deal"));
+        return <div>{winName}</div>;
+      }
+      return <div>&nbsp;</div>;
     case Stages.PAYING:
+    case Stages.PAID:
       if (winAmount) {
         return (
           <div>
@@ -22,7 +27,7 @@ export const GameStatus = () => {
       } else {
         return <div>No win :(</div>;
       }
+    default:
+      return <div>&nbsp;</div>;
   }
-
-  return <div> </div>;
 };

@@ -37,7 +37,6 @@ const HoldsDisplay = ({
   holdsOrder?: SortIndex;
 }) => {
   if (sortedHand && holdsOrder) {
-    console.log(sortedHand, holdsOrder);
     const orderedHand = holdsOrder.map((i) => sortedHand[i]) as Hand;
     const orderedHides = holdsOrder.map(
       (i) => holdPattern[i] !== "1"

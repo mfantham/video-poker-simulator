@@ -48,7 +48,7 @@ export const MenuButton = ({
   lockedOn = false,
 }: {
   onClick: () => any;
-  children: ReactNode;
+  children: ReactNode | ReactNode[];
   disabled?: boolean;
   lockedOn?: boolean;
 }) => {

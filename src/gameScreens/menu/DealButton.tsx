@@ -38,17 +38,19 @@ export const DealButton = () => {
   const coinsPerBet = useCoinsPerBet();
 
   const handleDeal = useCallback(() => {
+    resetHolds();
     const [newDeal, deck] = deal();
     setCurrentDeck(deck);
     setCurrentHand(newDeal);
     decrementCoins(betSize * coinsPerBet);
     const winId = calculateWins(newDeal, variant);
     setWin(winId); // At this stage, we don't pay out. Any win-on-the-deal is for player info only
-    setStage(Stages.DEALT);
+    setStage(Stages.DEALING);
   }, [
     betSize,
     coinsPerBet,
     decrementCoins,
+    resetHolds,
     setCurrentDeck,
     setCurrentHand,
     setStage,
@@ -68,12 +70,11 @@ export const DealButton = () => {
     }
     setCurrentHand(newHand);
 
-    resetHolds();
     const winId = calculateWins(newHand, variant);
     setWin(winId);
     const winPayout = payout(winId, variant) * betSize * coinsPerBet;
     incrementCoins(winPayout);
-    setStage(Stages.PAYING);
+    setStage(Stages.DRAWING);
   }, [
     betSize,
     coinsPerBet,
@@ -81,7 +82,6 @@ export const DealButton = () => {
     currentHand,
     holds,
     incrementCoins,
-    resetHolds,
     setCurrentHand,
     setStage,
     setWin,

@@ -7,7 +7,7 @@ import {
   useShowAnalysis,
   useStage,
 } from "../../redux/hooks";
-import { GHand } from "../../graphics/gHand";
+import { HandDealer } from "../../graphics/HandDealer";
 import { MenuBar } from "../menu/MenuBar";
 import { GameStatus } from "../menu/GameStatus";
 import { PayTable } from "../analysis/PayTable";
@@ -48,7 +48,7 @@ export const GameScreen = () => {
     <GameDiv>
       <PayTable />
       <GameStatus />
-      <GHand hand={hand} editable={false} holdable={stage === Stages.DEALT} />
+      <HandDealer hand={hand} />
       {showAnalysis && (
         <AnalysisTable
           handIdx={analysisHandIdx}

@@ -22,11 +22,9 @@ const Selector = ({
   variant: GameVariant;
 }) => {
   return (
-    <Grid2 xs={6} sm={3}>
-      <Link to={route}>
-        <SelectorSVG variant={variant} />
-      </Link>
-    </Grid2>
+    <Link to={route}>
+      <SelectorSVG variant={variant} />
+    </Link>
   );
 };
 
@@ -57,7 +55,9 @@ const GameSelectors = ({
   });
   return (
     <>
-      {selectors}
+      <Grid2 xs={6} sm={3}>
+        {selectors}
+      </Grid2>
       <MenuBarButtonRow>
         <CoinsPerBetButton />
       </MenuBarButtonRow>

@@ -6,6 +6,7 @@ import {
   incrementBet,
   incrementByAmount,
   incrementCoinsPerBet,
+  incrementSpeed,
   resetHolds,
   setCurrentDeck,
   setCurrentHand,
@@ -145,3 +146,10 @@ export const useToggleShowAnalysis = () => {
 
 export const useShowAnalysis = () =>
   useAppSelector((state) => state.game.showAnalysis);
+
+export const useSpeed = () => useAppSelector((state) => state.game.speed);
+export const useIncrementSpeed = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(incrementSpeed()), [dispatch]);
+};

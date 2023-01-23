@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useHolds, useStage, useToggleHold } from "../redux/hooks";
 import { Stages } from "../redux/types";
 import { HidePattern } from "../types/HidePattern";
+import { useCallback, useEffect } from "react";
 
 const HandHolder = styled.div<{ mini: boolean }>`
   display: flex;
@@ -31,6 +32,21 @@ export const GHand = ({
   if (hidden) {
     hide = [true, true, true, true, true];
   }
+
+  const handleKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (holdable && ["1", "2", "3", "4", "5"].includes(e.key)) {
+        const idx = parseInt(e.key) - 1;
+        toggleHold(idx);
+      }
+    },
+    [holdable, toggleHold]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keyup", handleKeyUp);
+    return () => window.removeEventListener("keyup", handleKeyUp);
+  });
 
   const cards = hand.map((card, idx) => {
     const holdCallback = (idx: number) => {
