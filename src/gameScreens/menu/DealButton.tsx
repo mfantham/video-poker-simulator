@@ -1,5 +1,5 @@
 import { Stages } from "../../redux/types";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   useBetSize,
   useCoinsPerBet,
@@ -88,9 +88,24 @@ export const DealButton = () => {
     variant,
   ]);
 
-  if (gameStage !== Stages.DEALT) {
-    return <MenuButton onClick={handleDeal}>deal</MenuButton>;
+  if (gameStage === Stages.DEALT) {
+    return (
+      <MenuButton onClick={handleDraw} keyCode={["Space", "Enter", "KeyD"]}>
+        draw
+      </MenuButton>
+    );
+  }
+  if (gameStage === Stages.PREGAME || gameStage === Stages.PAID) {
+    return (
+      <MenuButton onClick={handleDeal} keyCode={["Space", "Enter", "KeyD"]}>
+        deal
+      </MenuButton>
+    );
   } else {
-    return <MenuButton onClick={handleDraw}>draw</MenuButton>;
+    return (
+      <MenuButton disabled onClick={handleDeal}>
+        deal
+      </MenuButton>
+    );
   }
 };

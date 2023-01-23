@@ -11,10 +11,10 @@ export const BetIncrementButtons = () => {
 
   return (
     <>
-      <MenuButton disabled={!enabled} onClick={incrementBet}>
+      <MenuButton disabled={!enabled} onClick={incrementBet} keyCode={"KeyN"}>
         bet one
       </MenuButton>
-      <MenuButton disabled={!enabled} onClick={setMaxBet}>
+      <MenuButton disabled={!enabled} onClick={setMaxBet} keyCode={"KeyM"}>
         bet max
       </MenuButton>
     </>

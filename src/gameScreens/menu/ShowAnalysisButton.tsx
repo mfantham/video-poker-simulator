@@ -6,7 +6,11 @@ export const ShowAnalysisButton = () => {
   const toggleShowAnalysis = useToggleShowAnalysis();
 
   return (
-    <MenuButton onClick={toggleShowAnalysis} lockedOn={showAnalysis}>
+    <MenuButton
+      onClick={toggleShowAnalysis}
+      lockedOn={showAnalysis}
+      keyCode={"KeyA"}
+    >
       analysis
     </MenuButton>
   );

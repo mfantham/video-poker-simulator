@@ -146,7 +146,6 @@ export const gameSlice = createSlice({
       state.showAnalysis = !state.showAnalysis;
     },
     incrementSpeed: (state) => {
-      console.log(state.speed, (state.speed + 1) % 4);
       state.speed = (state.speed + 1) % 4;
     },
   },

@@ -45,8 +45,8 @@ export const MenuBar = () => {
         <FundsDisplay />
       </MenuBarTopRow>
       <MenuBarButtonRow>
-        <SpeedButton />
         <ShowAnalysisButton />
+        <SpeedButton />
         <BetIncrementButtons />
         <DealButton />
       </MenuBarButtonRow>

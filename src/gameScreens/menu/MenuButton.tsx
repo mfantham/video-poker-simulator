@@ -1,5 +1,5 @@
+import { ReactNode, useCallback, useEffect } from "react";
 import styled from "styled-components";
-import { ReactNode } from "react";
 
 const BUTTON_WIDTH = "130px";
 const BUTTON_HEIGHT = "50px";
@@ -46,12 +46,35 @@ export const MenuButton = ({
   children,
   disabled = false,
   lockedOn = false,
+  keyCode,
 }: {
   onClick: () => any;
   children: ReactNode | ReactNode[];
   disabled?: boolean;
   lockedOn?: boolean;
+  keyCode?: string | string[];
 }) => {
+  const handleKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (keyCode) {
+        if (Array.isArray(keyCode)) {
+          if (keyCode.includes(e.code)) {
+            onClick();
+          }
+        } else {
+          if (e.code === keyCode) {
+            onClick();
+          }
+        }
+      }
+    },
+    [keyCode, onClick]
+  );
+  useEffect(() => {
+    window.addEventListener("keyup", handleKeyUp);
+    return () => window.removeEventListener("keyup", handleKeyUp);
+  }, [handleKeyUp]);
+
   return (
     <BackgroundButton>
       <ForegroundButton
