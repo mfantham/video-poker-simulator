@@ -23,6 +23,10 @@ export const NavBar = () => {
       <ListItem key="gap" disablePadding>
         <ListItemButton sx={{ pl: 4 }} />
       </ListItem>
+      <NavLink link={"/auto"} alt={"AUTO PLAY"} />
+      <ListItem key="gap" disablePadding>
+        <ListItemButton sx={{ pl: 4 }} />
+      </ListItem>
       <NavLink link={"/analysis"} alt={"ANALYSIS"} />
       <NavLink link={"/settings"} alt={"SETTINGS"} />
     </div>

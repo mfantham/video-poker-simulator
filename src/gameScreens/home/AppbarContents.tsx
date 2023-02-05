@@ -12,6 +12,9 @@ export const AppbarContents = () => {
   if (pathname.includes("jacks")) {
     return <>Jacks or Better</>;
   }
+  if (pathname.includes("auto")) {
+    return <>Auto Play!</>;
+  }
 
   return <>MF Video Poker</>;
 };

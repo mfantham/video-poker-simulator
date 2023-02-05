@@ -22,6 +22,26 @@ const memoPayoutTable = async (variant: VARIANT) => {
   return MEMO_PAYOUT_TABLE[variant] as number[];
 };
 
+export const evaluateBestHolds = async (
+  handIndex: number,
+  variant: VARIANT
+) => {
+  const allPayouts = await memoPayoutTable(variant);
+  const gpuAnalysisResult = await runGpuAnalysis(handIndex, allPayouts);
+  let bestExpectedPayout = 0;
+  let bestHoldId = -1;
+  gpuAnalysisResult.holdIds.forEach((holdId) => {
+    const totalPayout = gpuAnalysisResult.totalPayout[holdId];
+    const totalSwaps = gpuAnalysisResult.totalSwaps[holdId];
+    const expectedPayout = totalPayout / totalSwaps;
+    if (expectedPayout > bestExpectedPayout) {
+      bestExpectedPayout = expectedPayout;
+      bestHoldId = holdId;
+    }
+  });
+  return { bestExpectedPayout, bestHold: intToHoldString(bestHoldId) };
+};
+
 export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
   const allPayouts = await memoPayoutTable(variant);
   const gpuAnalysisResult = await runGpuAnalysis(handIndex, allPayouts);
