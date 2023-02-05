@@ -1,5 +1,5 @@
+import { useCallback } from "react";
 import { Stages } from "../../redux/types";
-import React, { useCallback, useEffect } from "react";
 import {
   useBetSize,
   useCoinsPerBet,

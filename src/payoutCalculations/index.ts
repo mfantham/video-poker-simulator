@@ -3,8 +3,14 @@
 import { Hand } from "../types/hand";
 import { VARIANT } from "../types/variant";
 
-import { calculateWins as calculateWinsJacks } from "./jacks-or-better/calculatePayout";
-import { calculateWins as calculateWinsDeuces } from "./deuces-wild/calculatePayout";
+import {
+  calculateWins as calculateWinsJacks,
+  getPaytable as getAllPayoutsJacks,
+} from "./jacks-or-better/calculatePayout";
+import {
+  calculateWins as calculateWinsDeuces,
+  getPaytable as getAllPayoutsDeuces,
+} from "./deuces-wild/calculatePayout";
 
 import {
   Payout as PayoutJacks,
@@ -83,4 +89,15 @@ export const paytable = (variant: VARIANT) => {
   });
   const sortedTable = nameWinTable.sort((a, b) => b[5] - a[5]);
   return sortedTable;
+};
+
+export const getAllPayouts = async (variant: VARIANT) => {
+  switch (variant) {
+    case VARIANT.JACKS_OR_BETTER:
+      return await getAllPayoutsJacks();
+    case VARIANT.DEUCES_WILD:
+      return await getAllPayoutsDeuces();
+    default:
+      throw new Error(`unknown game variant: ${variant}`);
+  }
 };

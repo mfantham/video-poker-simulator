@@ -41,6 +41,7 @@ interface AppState {
   };
   showAnalysis: boolean;
   speed: number;
+  volume: number;
 }
 
 const [initialHand, initialDeck]: [Hand, Deck] = deal();
@@ -70,6 +71,7 @@ export const initialState: AppState = {
   win: { winId: 0, winAmount: 0, winName: "" },
   showAnalysis: false,
   speed: 2,
+  volume: 1,
 };
 
 export const gameSlice = createSlice({
@@ -148,6 +150,9 @@ export const gameSlice = createSlice({
     incrementSpeed: (state) => {
       state.speed = (state.speed + 1) % 4;
     },
+    incrementVolume: (state) => {
+      state.volume = (state.volume + 1) % 3;
+    },
   },
 });
 
@@ -168,4 +173,5 @@ export const {
   incrementCoinsPerBet,
   toggleShowAnalysis,
   incrementSpeed,
+  incrementVolume,
 } = gameSlice.actions;

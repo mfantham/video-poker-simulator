@@ -7,6 +7,7 @@ import {
   incrementByAmount,
   incrementCoinsPerBet,
   incrementSpeed,
+  incrementVolume,
   resetHolds,
   setCurrentDeck,
   setCurrentHand,
@@ -152,4 +153,11 @@ export const useIncrementSpeed = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(() => dispatch(incrementSpeed()), [dispatch]);
+};
+
+export const useVolume = () => useAppSelector((state) => state.game.volume);
+export const useIncrementVolume = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(incrementVolume()), [dispatch]);
 };

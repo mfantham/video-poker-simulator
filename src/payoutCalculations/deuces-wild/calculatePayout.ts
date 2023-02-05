@@ -8,7 +8,7 @@ import { indexOfCombination } from "../../strategy/combinations";
 let paytable: number[] | null = null;
 
 export const fetchPaytable = async () => {
-  const response = await fetch("./paytables/deucesWild.bin");
+  const response = await fetch("/paytables/deucesWild.bin");
   const arrayResponse = new Uint8Array(await response.arrayBuffer());
   const decodedPaytable: number[] = Array.from(arrayResponse).map((v) => {
     // @ts-ignore

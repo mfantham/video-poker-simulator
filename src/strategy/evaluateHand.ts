@@ -1,9 +1,8 @@
-import { getPaytable as getPaytableJacks } from "../payoutCalculations/jacks-or-better/calculatePayout";
-import { getPaytable as getPaytableDeuces } from "../payoutCalculations/deuces-wild/calculatePayout";
 import { HoldsTable } from "../types/Hold";
 import { runGpuAnalysis } from "../webgpu/runGpuAnalysis";
 import { VARIANT } from "../types/variant";
 import { intToHoldString } from "../utils/intToHoldString";
+import { getAllPayouts } from "../payoutCalculations";
 
 export const evaluateHand = async (
   handIndex: number,
@@ -14,21 +13,18 @@ export const evaluateHand = async (
   });
 };
 
-export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
-  let paytable = null;
+let MEMO_PAYOUT_TABLE: Partial<Record<VARIANT, number[] | null>> = {};
 
-  switch (variant) {
-    case VARIANT.DEUCES_WILD:
-      paytable = await getPaytableDeuces();
-      break;
-    case VARIANT.JACKS_OR_BETTER:
-      paytable = await getPaytableJacks();
-      break;
-    default:
-      throw new Error("Could not find the requested variant.");
+const memoPayoutTable = async (variant: VARIANT) => {
+  if (MEMO_PAYOUT_TABLE[variant] === undefined) {
+    MEMO_PAYOUT_TABLE[variant] = await getAllPayouts(variant);
   }
+  return MEMO_PAYOUT_TABLE[variant] as number[];
+};
 
-  const gpuAnalysisResult = await runGpuAnalysis(handIndex, paytable);
+export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
+  const allPayouts = await memoPayoutTable(variant);
+  const gpuAnalysisResult = await runGpuAnalysis(handIndex, allPayouts);
 
   const holdStats = gpuAnalysisResult.holdIds.map((holdId) => {
     const totalPayout = gpuAnalysisResult.totalPayout[holdId];

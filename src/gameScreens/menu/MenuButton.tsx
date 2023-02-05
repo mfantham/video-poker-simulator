@@ -19,7 +19,7 @@ const ForegroundButton = styled.div<{ disabled: boolean; lockedOn: boolean }>`
 
   color: blue;
   -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: #00000077;
+  -webkit-text-stroke-color: #000000bb;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,8 +36,9 @@ const BackgroundButton = styled.div`
   z-index: 0;
   background: linear-gradient(166deg, #fff700, #ffbd00);
   pointer-events: none;
-  &:hover {
-    linear-gradient(346deg, #00ffff, #0000cc);
+
+  &:has(div:active) {
+    background: linear-gradient(166deg, #eee600, #eeac00);
   }
 `;
 

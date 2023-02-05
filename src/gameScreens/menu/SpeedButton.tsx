@@ -1,6 +1,6 @@
+import styled from "styled-components";
 import { useIncrementSpeed, useSpeed } from "../../redux/hooks";
 import { MenuButton } from "./MenuButton";
-import styled from "styled-components";
 
 const SpeedHolder = styled.div`
   font-size: 24px;

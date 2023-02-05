@@ -22,9 +22,11 @@ const Selector = ({
   variant: GameVariant;
 }) => {
   return (
-    <Link to={route}>
-      <SelectorSVG variant={variant} />
-    </Link>
+    <Grid2 xs={6} sm={4} md={3}>
+      <Link to={route}>
+        <SelectorSVG variant={variant} />
+      </Link>
+    </Grid2>
   );
 };
 
@@ -35,8 +37,8 @@ type Games = Record<MultiOption, GameList>;
 
 const games: Games = {
   singlePlay: [
-    { route: `./deuces`, variant: GameVariant.DEUCES_WILD },
-    { route: `./jacks`, variant: GameVariant.JACKS_OR_BETTER },
+    { route: `/single/deuces`, variant: GameVariant.DEUCES_WILD },
+    { route: `/single/jacks`, variant: GameVariant.JACKS_OR_BETTER },
   ],
   triplePlay: [],
   fivePlay: [],
@@ -55,10 +57,10 @@ const GameSelectors = ({
   });
   return (
     <>
-      <Grid2 xs={6} sm={3}>
+      <Grid2 container spacing={2}>
         {selectors}
       </Grid2>
-      <MenuBarButtonRow>
+      <MenuBarButtonRow style={{ height: 90 }}>
         <CoinsPerBetButton />
       </MenuBarButtonRow>
     </>
@@ -74,8 +76,8 @@ export const GameSelection = () => {
           path="single"
           element={<GameSelectors multiOption={"singlePlay"} />}
         />
-        <Route path="single/deuces" element={<PlayDeucesWild />} />
-        <Route path="single/jacks" element={<PlayJacks />} />
+        <Route path="/single/deuces" element={<PlayDeucesWild />} />
+        <Route path="/single/jacks" element={<PlayJacks />} />
         <Route
           path="triple"
           element={<GameSelectors multiOption={"triplePlay"} />}

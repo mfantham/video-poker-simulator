@@ -12,6 +12,7 @@ const DEFAULT_HOLDS_LENGTH = 32;
 const TableHolder = styled.div`
   overflow: auto;
   border-radius: 20px;
+  margin: 0 auto;
 `;
 
 const TableHead = styled.thead`

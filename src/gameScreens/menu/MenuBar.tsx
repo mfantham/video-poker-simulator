@@ -5,6 +5,7 @@ import { BetDisplay } from "./BetDisplay";
 import { BetIncrementButtons } from "./BetIncrementButtons";
 import { ShowAnalysisButton } from "./ShowAnalysisButton";
 import { SpeedButton } from "./SpeedButton";
+import { VolumeButton } from "./VolumeButton";
 
 const BUTTON_ROW_HEIGHT = "60px"; // button height + padding. calc?
 const TOP_ROW_MENU_HEIGHT = "42px";
@@ -45,6 +46,7 @@ export const MenuBar = () => {
         <FundsDisplay />
       </MenuBarTopRow>
       <MenuBarButtonRow>
+        <VolumeButton />
         <ShowAnalysisButton />
         <SpeedButton />
         <BetIncrementButtons />

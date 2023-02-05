@@ -70,15 +70,15 @@ export const PayTable = () => {
   const rows = nameWinTable.map((row, rowIdx) => {
     const cells = row.map((cell, idx) => {
       if (row.includes(0)) return null;
+      const textAlign: AlignSetting = idx === 0 ? "left" : "center";
 
       const cellStyle = {
         margin: "-2px 5px",
-        textAlign: idx === 0 ? "left" : "center",
+        textAlign: textAlign,
         gridColumn: `${idx + 1}/${idx + 2}`,
         gridRow: `${rowIdx + 1}/${rowIdx + 2}`,
         zIndex: 2,
       };
-      // @ts-ignore TODO: lookup why textAlign isn't allowed
       return <div style={cellStyle}>{cell}</div>;
     });
     return <>{cells}</>;
