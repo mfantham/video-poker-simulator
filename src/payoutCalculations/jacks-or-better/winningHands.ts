@@ -1,5 +1,5 @@
 import { Hand } from "../../types/hand";
-import { sortHand } from "../../types/sortHand";
+import { sortCardsByValue } from "../../strategy/sortCardsByValue";
 
 const handValueRepeats = (hand: Hand): Array<number> => {
   let repeatCounter = new Array(14).fill(0);
@@ -63,7 +63,7 @@ export const isFlush = (hand: Hand): boolean => {
 };
 
 export const isRoyalStraight = (hand: Hand): boolean => {
-  const sorted = sortHand(hand);
+  const sorted = sortCardsByValue(hand);
   return (
     sorted[0].value === 1 &&
     sorted[1].value === 10 &&
@@ -77,7 +77,7 @@ export const isStraight = (hand: Hand): boolean => {
   if (isRoyalStraight(hand)) {
     return true;
   }
-  const sorted = sortHand(hand);
+  const sorted = sortCardsByValue(hand);
   for (let i = 1; i < hand.length; i++) {
     if (sorted[i].value !== 1 + sorted[i - 1].value) {
       return false;

@@ -9,7 +9,6 @@ export const SynthEngine = () => {
   const dealCard = useCallback(() => {
     const audioCtx = audioContext.current;
     if (!audioCtx || volume === 0) return;
-    console.log(volume);
     const gain = audioCtx.createGain();
     gain.connect(audioCtx.destination);
 

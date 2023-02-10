@@ -1,5 +1,5 @@
 import { Hand } from "../../types/hand";
-import { sortCards } from "../../types/sortHand";
+import { sortCardsByValue } from "../../strategy/sortCardsByValue";
 import { Card } from "../../types/card";
 
 /* 
@@ -64,7 +64,7 @@ export class OptimizedHandCalculator {
     if (this.isRoyalStraight()) {
       return true;
     }
-    const sortedDeucelessHand = sortCards(this.deucelessHand);
+    const sortedDeucelessHand = sortCardsByValue(this.deucelessHand);
     let deucesRemaining = this.nDeuces;
     let counter = sortedDeucelessHand[0].value;
     let i = 1;

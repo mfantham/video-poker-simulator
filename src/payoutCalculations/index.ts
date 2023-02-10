@@ -58,6 +58,21 @@ export const payout = (winId: number, variant: VARIANT) => {
   }
 };
 
+export const calculatePayout = (hand: Hand, variant: VARIANT) => {
+  let winId = undefined;
+  switch (variant) {
+    case VARIANT.JACKS_OR_BETTER:
+      winId = calculateWinsJacks(hand);
+      break;
+    case VARIANT.DEUCES_WILD:
+      winId = calculateWinsDeuces(hand);
+      break;
+    default:
+      throw new Error(`unknown game variant: ${variant}`);
+  }
+  return payout(winId, variant);
+};
+
 export const paytable = (variant: VARIANT) => {
   // @ts-ignore
   let winAmounts = undefined;

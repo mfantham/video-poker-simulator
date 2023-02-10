@@ -18,12 +18,14 @@ export const GHand = ({
   holdable = false,
   hide = [false, false, false, false, false],
   mini = false,
+  fixedHolds = undefined,
 }: {
   hand: Hand;
   editable?: boolean;
   holdable?: boolean;
   hide?: HidePattern;
   mini?: boolean;
+  fixedHolds?: HidePattern;
 }) => {
   const toggleHold = useToggleHold();
   const holds = useHolds();
@@ -61,7 +63,7 @@ export const GHand = ({
         hidden={hide[idx]}
         editable={editable}
         holdable={holdable}
-        hold={holds[idx]}
+        hold={fixedHolds?.[idx] ?? holds[idx]}
         holdCallback={() => holdCallback(idx)}
       />
     );

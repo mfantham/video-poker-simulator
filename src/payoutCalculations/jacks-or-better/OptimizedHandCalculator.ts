@@ -1,5 +1,5 @@
 import { Hand } from "../../types/hand";
-import { sortHand } from "../../types/sortHand";
+import { sortCardsByValue } from "../../strategy/sortCardsByValue";
 
 export class OptimizedHandCalculator {
   hand: Hand;
@@ -9,7 +9,7 @@ export class OptimizedHandCalculator {
 
   constructor(newHand: Hand) {
     this.hand = newHand;
-    this.sortedHand = sortHand(this.hand) as unknown as Hand;
+    this.sortedHand = sortCardsByValue(this.hand) as unknown as Hand;
 
     this.handRepeats = new Array(14).fill(0);
     this.hand.forEach(({ value }) => this.handRepeats[value]++);

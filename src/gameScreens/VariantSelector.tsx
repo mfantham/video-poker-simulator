@@ -1,12 +1,18 @@
+import { useCallback, useMemo } from "react";
 import Select, { SingleValue } from "react-select";
+import styled from "styled-components";
+
 import { useSetVariant, useVariant } from "../redux/hooks";
 import { VARIANT } from "../types/variant";
-import { useCallback, useMemo } from "react";
 
 type VariantOptionType = {
   value: VARIANT;
   label: VARIANT;
 };
+
+const SelectorHolder = styled.div`
+  min-width: 240px;
+`;
 
 export const VariantSelector = () => {
   const variant = useVariant();
@@ -24,10 +30,12 @@ export const VariantSelector = () => {
   const value = useMemo(() => ({ value: variant, label: variant }), [variant]);
 
   return (
-    <Select<VariantOptionType>
-      value={value}
-      options={options}
-      onChange={onChange}
-    />
+    <SelectorHolder>
+      <Select<VariantOptionType>
+        value={value}
+        options={options}
+        onChange={onChange}
+      />
+    </SelectorHolder>
   );
 };

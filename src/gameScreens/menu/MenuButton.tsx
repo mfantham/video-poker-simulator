@@ -48,12 +48,14 @@ export const MenuButton = ({
   disabled = false,
   lockedOn = false,
   keyCode,
+  title = "",
 }: {
   onClick: () => any;
   children: ReactNode | ReactNode[];
   disabled?: boolean;
   lockedOn?: boolean;
   keyCode?: string | string[];
+  title?: string;
 }) => {
   const handleKeyUp = useCallback(
     (e: KeyboardEvent) => {
@@ -82,6 +84,7 @@ export const MenuButton = ({
         onClick={disabled ? () => null : onClick}
         disabled={disabled}
         lockedOn={lockedOn}
+        title={title}
       >
         {!disabled && children}
       </ForegroundButton>

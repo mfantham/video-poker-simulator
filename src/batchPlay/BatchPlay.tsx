@@ -3,32 +3,44 @@ import styled from "styled-components";
 import { CircularProgress } from "@mui/material";
 
 import { deal } from "../mechanics/deal";
-import { calculatePayout } from "../payoutCalculations/dumb-luck/calculatePayout";
-import { costOfGame } from "../payoutCalculations/dumb-luck/payout";
 import { HistoryGraph } from "./HistoryGraph";
+import { HandHistory } from "./HandHistory";
 import { initialState } from "../redux/reducers";
 import { evaluateBestHolds } from "../strategy/evaluateHand";
 import { VARIANT } from "../types/variant";
 import { handToHandIdx } from "../utils/handToHandIdx";
-import { useVariant } from "../redux/hooks";
+import { useSetStage, useVariant } from "../redux/hooks";
 import { VariantSelector } from "../gameScreens/VariantSelector";
 import { Hand } from "../types/hand";
-
-type GameResult = {
-  payout: number;
-  dealtHand: Hand;
-  newHand: Hand;
-};
+import { GameResult } from "../types/GameResult";
+import { Stages } from "../redux/types";
+import { calculatePayout } from "../payoutCalculations";
+import { sortHand } from "../utils/sortHand";
+import { MenuButton } from "../gameScreens/menu/MenuButton";
 
 const initialCoins = initialState.coins;
+const costOfGame = 1;
 
 const ButtonsHolder = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
-const ResultsHolder = styled.p`
+const AutoplayControlsHolder = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 250px 250px;
+`;
+
+const ProgressHolder = styled.div`
+  width: 52px;
+  height: 52px;
+`;
+
+const ResultsHolder = styled.div`
+  font-size: 24px;
   [id*="MuiCircularProgress"] {
     transition: none;
   }
@@ -37,35 +49,57 @@ const ResultsHolder = styled.p`
 const playHandOptimally = async (variant: VARIANT): Promise<GameResult> => {
   const [dealtHand, currentDeck] = deal();
   const handId = handToHandIdx(dealtHand);
-  const { bestHold } = await evaluateBestHolds(handId, variant);
-  const newHand = [...dealtHand] as Hand;
-  for (let i = 0; i < bestHold.length; i++) {
-    if (bestHold[i] === "0") {
-      newHand[i] = currentDeck[i + 5];
+  const { bestHold, bestExpectedPayout } = await evaluateBestHolds(
+    handId,
+    variant
+  );
+  // best hold works on sorted hand...
+  const { sortedHand, sortIndex, inverseSortIndex } = sortHand(dealtHand);
+  const bestHoldUnsorted = inverseSortIndex.map((idx) => bestHold[idx] === "1");
+  const newHandSorted = [...sortedHand] as Hand;
+  bestHold.split("").forEach((hold, idx) => {
+    if (hold === "0") {
+      newHandSorted[idx] = currentDeck[idx + 5];
     }
-  }
-  const payout = calculatePayout(newHand);
+  });
 
-  return { payout, dealtHand, newHand };
+  const payout = calculatePayout(newHandSorted, variant);
+  const newHand = sortIndex.map((idx) => newHandSorted[idx]) as Hand;
+  return {
+    payout,
+    expectedPayout: bestExpectedPayout,
+    dealtHand,
+    newHand,
+  };
 };
 
 const PlayGamesButtons = ({ callback }: { callback: Function }) => {
-  const nGamesOptions = [100, 1000, 1e5, 1e6];
+  const nGamesOptions = [100, 1000];
   const buttons = nGamesOptions.map((n, idx) => {
     return (
-      <button key={idx} onClick={() => callback(n)}>
-        Play {n} games
-      </button>
+      <>
+        <MenuButton
+          key={idx}
+          onClick={() => callback(n)}
+          title={`Play ${n} games`}
+        >
+          {n}X
+        </MenuButton>
+      </>
     );
   });
-  return <ButtonsHolder>{buttons}</ButtonsHolder>;
+  return <>{buttons}</>;
 };
 
 export const BatchPlay = () => {
   const variant = useVariant();
+  const setStage = useSetStage();
   const [progress, setProgress] = useState<number>(100);
   const [history, setHistory] = useState<Array<GameResult>>([]);
   const [coinsHistory, setCoinsHistory] = useState<Array<number>>([
+    initialCoins,
+  ]);
+  const [expectedHistory, setExpectedHistory] = useState<Array<number>>([
     initialCoins,
   ]);
 
@@ -75,44 +109,93 @@ export const BatchPlay = () => {
         // Play 1 game at a time so that history updates
         const result = await playHandOptimally(variant);
         setHistory((s) => [...s, result]);
-        setCoinsHistory((s) => [...s, (s.at(-1) ?? 0) + result.payout - 1]);
+        setCoinsHistory((s) => [
+          ...s,
+          (s.at(-1) ?? 0) + result.payout - costOfGame,
+        ]);
+        setExpectedHistory((s) => [
+          ...s,
+          (s.at(-1) ?? 0) + result.expectedPayout - costOfGame,
+        ]);
         setProgress(1 + (100 * i) / n);
       }
     },
     [variant]
   );
 
-  useEffect(() => {
-    // Play 100 games on startup
-    handleClick(100);
+  const handleReset = useCallback(() => {
+    setHistory([]);
+    setCoinsHistory([initialCoins]);
+    setExpectedHistory([initialCoins]);
+    setProgress(100);
   }, []);
 
+  useEffect(() => {
+    setStage(Stages.EXPLORER);
+  }, [setStage]);
+
+  useEffect(() => {
+    handleReset();
+  }, [handleReset, variant]);
+
   const coins = coinsHistory.at(-1) ?? initialCoins;
+  const expectedCoins = expectedHistory.at(-1) ?? initialCoins;
 
   const returnOnInvestment = useMemo(() => {
-    const amountInvested = (history.length - 1) * costOfGame;
-    const amountWon = coins - initialCoins + amountInvested; // amount actually won includes investment
-    return (100 * amountWon) / amountInvested;
-  }, [history, coins]);
+    const turnover = history.length * costOfGame;
+    const amountWon = history.reduce((acc, { payout }) => acc + payout, 0);
+    const expectedWin = history.reduce(
+      (acc, { expectedPayout }) => acc + expectedPayout,
+      0
+    );
+    const returnToPlayer = amountWon / turnover;
+    const expectedReturnToPlayer = expectedWin / turnover;
+    return {
+      rtp: 100 * returnToPlayer,
+      expectedRTP: 100 * expectedReturnToPlayer,
+    };
+  }, [history]);
 
   return (
     <>
-      <PlayGamesButtons callback={handleClick} />
-      <VariantSelector />
-      <ResultsHolder>
-        Games: {history.length - 1}
-        <br />
-        Coins: {coins.toFixed(0)}
-        <br />
-        Return: {returnOnInvestment.toFixed(3)}%
-        {progress < 100 && (
-          <>
-            <br />
-            <CircularProgress variant="determinate" value={progress} />
-          </>
-        )}
-      </ResultsHolder>
-      <HistoryGraph history={coinsHistory} />
+      <AutoplayControlsHolder>
+        <ButtonsHolder>
+          <PlayGamesButtons callback={handleClick} />
+          <ProgressHolder>
+            {progress < 100 && (
+              <CircularProgress variant="determinate" value={progress} />
+            )}
+          </ProgressHolder>
+          <MenuButton onClick={handleReset} title="Reset stats">
+            Reset
+          </MenuButton>
+          <VariantSelector />
+        </ButtonsHolder>
+        <ResultsHolder>
+          Games: {history.length}
+          <br />
+          Coins: {coins.toFixed(0)}
+          <br />
+          Exp. coins: {expectedCoins.toFixed(0)}
+        </ResultsHolder>
+        <ResultsHolder>
+          RTP:{" "}
+          {isNaN(returnOnInvestment.rtp)
+            ? "--"
+            : returnOnInvestment.rtp.toFixed(3)}
+          %
+          <br />
+          Exp. RTP:{" "}
+          {isNaN(returnOnInvestment.expectedRTP)
+            ? "--"
+            : returnOnInvestment.expectedRTP.toFixed(3)}
+          %
+          <br />
+          Luck: {((100 * coins) / expectedCoins).toFixed(3)}%
+        </ResultsHolder>
+      </AutoplayControlsHolder>
+      <HistoryGraph coinsHistory={coinsHistory} expected={expectedHistory} />
+      <HandHistory history={history} />
     </>
   );
 };

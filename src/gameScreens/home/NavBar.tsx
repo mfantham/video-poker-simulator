@@ -24,7 +24,7 @@ export const NavBar = () => {
         <ListItemButton sx={{ pl: 4 }} />
       </ListItem>
       <NavLink link={"/auto"} alt={"AUTO PLAY"} />
-      <ListItem key="gap" disablePadding>
+      <ListItem key="gap2" disablePadding>
         <ListItemButton sx={{ pl: 4 }} />
       </ListItem>
       <NavLink link={"/analysis"} alt={"ANALYSIS"} />

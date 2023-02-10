@@ -27,7 +27,7 @@ const HiddenDiv = styled.div`
 const TextSpan = styled.span`
   font-size: 14px;
   line-height: 10px;
-  margin-top: 10px;
+  margin-top: 2px;
 `;
 
 const gSuit = {
