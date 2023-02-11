@@ -7,6 +7,7 @@ import { HandExplorer } from "../analysis/HandExplorer";
 import { PlayJacks } from "../games/PlayJacks";
 import { AutoPlay } from "../autoplay/AutoPlay";
 import { MenuBarButtonRow } from "../menu/MenuBar";
+import { Help } from "./Help";
 import { CoinsPerBetButton } from "./CoinsPerBetButton";
 import styled from "styled-components";
 
@@ -85,6 +86,7 @@ export const GameSelection = () => {
         />
         <Route path="auto" element={<AutoPlay />} />
         <Route path="analysis" element={<HandExplorer />} />
+        <Route path="help" element={<Help />} />
       </Routes>
     </PageHolder>
   );
