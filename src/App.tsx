@@ -15,11 +15,11 @@ function App() {
   return (
     <div className="App">
       <SynthEngine />
-      <header className="App-header">
+      <div className="App-holder">
         <Routes>
           <Route path="/*" element={<Home />} />
         </Routes>
-      </header>
+      </div>
     </div>
   );
 }

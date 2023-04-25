@@ -1,3 +1,5 @@
+import Grid2 from "@mui/material/Unstable_Grid2"; // Grid version 2
+
 import { Hand } from "../types/hand";
 import { GCard } from "./gCard";
 import styled from "styled-components";
@@ -68,5 +70,14 @@ export const GHand = ({
       />
     );
   });
-  return <HandHolder mini={mini}>{cards}</HandHolder>;
+
+  if (mini) {
+    return <HandHolder mini={mini}>{cards}</HandHolder>;
+  }
+
+  return (
+    <Grid2 container spacing={1}>
+      {cards}
+    </Grid2>
+  );
 };

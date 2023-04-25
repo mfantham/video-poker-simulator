@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
 import styled from "styled-components";
+import Grid2 from "@mui/material/Unstable_Grid2";
+
 import { Card } from "../types/card";
 import { valueToFaceCard } from "../utils/valueToFaceCard";
 import { useVariant } from "../redux/hooks";
@@ -9,14 +11,16 @@ import King from "./King.svg";
 import Queen from "./Queen.svg";
 import { Jack } from "./Jack.jsx";
 import { GCardMini } from "./gCardMini";
+import { DRAWER_WIDTH } from "../gameScreens/home/LayoutConstants";
 
 const CardDiv = styled.div<{ holdable?: boolean }>`
   background: white;
   position: relative;
   border: black solid 4px;
   border-radius: 20px;
-  height: 200px;
-  width: 123px;
+  //height: 30vw;
+  //width: 123px;
+  height: 100%;
   display: grid;
   user-select: none;
   ${(p) => p.holdable && "cursor: pointer;"}
@@ -128,17 +132,24 @@ export const GCard = ({
   }
 
   return (
-    <CardDiv onClick={holdCallback} holdable={holdable}>
-      {hidden ? (
-        <HiddenDiv />
-      ) : (
-        <TextSpan style={{ color: suitColor }}>
-          {cardValue}
-          {suitSymbol}
-          <GFace value={card.value} />
-          {holdable && hold && <Hold>HOLD</Hold>}
-        </TextSpan>
-      )}
-    </CardDiv>
+    <Grid2
+      xs
+      sx={{
+        height: { xs: "30vw", sm: `calc(0.3 * (100vw - ${DRAWER_WIDTH}px))` },
+      }}
+    >
+      <CardDiv onClick={holdCallback} holdable={holdable}>
+        {hidden ? (
+          <HiddenDiv />
+        ) : (
+          <TextSpan style={{ color: suitColor }}>
+            {cardValue}
+            {suitSymbol}
+            <GFace value={card.value} />
+            {holdable && hold && <Hold>HOLD</Hold>}
+          </TextSpan>
+        )}
+      </CardDiv>
+    </Grid2>
   );
 };

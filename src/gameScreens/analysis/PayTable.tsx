@@ -1,26 +1,20 @@
+import { CSSProperties, useCallback, useState } from "react";
 import styled from "styled-components";
+
 import { useBetSize, useVariant } from "../../redux/hooks";
 import { paytable } from "../../payoutCalculations";
-import { useCallback, useState } from "react";
+import { PayStringHolder, PayString } from "./PayString";
 
 const PAY_COLUMN_WIDTH = "50px";
 const PAY_COLUMNS = new Array(5).fill(PAY_COLUMN_WIDTH).join(" ");
 
 const PayTableElement = styled.div`
   display: grid;
-  width: 655px;
+  max-width: 655px;
   border: 2px solid yellow;
   grid-template-columns: 1fr ${PAY_COLUMNS};
   font-size: 16px;
   margin: auto;
-`;
-
-const PayStringHolder = styled.div`
-  position: relative;
-  &:not(:hover) .material-symbols-rounded {
-    display: none;
-  }
-  font-size: 24px;
 `;
 
 const ToggleCollapseButton = styled.span`
@@ -32,7 +26,24 @@ const ToggleCollapseButton = styled.span`
   user-select: none;
 `;
 
-const HighlightColumn = styled.div<{ column: number; length: number }>`
+type PayTableCellStyle = {
+  margin: string;
+  textAlign: AlignSetting;
+  gridColumn: string;
+  gridRow: string;
+  zIndex: number;
+  overflow?: string;
+  maxWidth?: string;
+  whiteSpace?: CSSProperties["whiteSpace"];
+  textOverflow?: string;
+};
+
+interface HighlightColumnProps {
+  column: number;
+  length: number;
+}
+
+const HighlightColumn = styled.div<HighlightColumnProps>`
   grid-column: ${(p) => `${p.column}/${p.column + 1}`};
   grid-row: 1 / ${(p) => p.length + 1};
   background: linear-gradient(155deg, #ff0000cc, #ff000077);
@@ -48,22 +59,15 @@ export const PayTable = () => {
   const toggleCollapse = useCallback(() => setCollapse((s) => !s), []);
 
   if (collapse) {
-    const winsString = [...nameWinTable]
-      .reverse()
-      .map(([_, win]) => `${win ? win * betSize : ""}`)
-      .filter((x) => x)
-      .join(", ");
     return (
-      <PayStringHolder>
-        {winsString}
+      <PayString>
         <ToggleCollapseButton
           className="material-symbols-rounded"
-          style={{ cursor: "pointer" }}
           onClick={toggleCollapse}
         >
           add_circle
         </ToggleCollapseButton>
-      </PayStringHolder>
+      </PayString>
     );
   }
 
@@ -71,15 +75,27 @@ export const PayTable = () => {
     const cells = row.map((cell, idx) => {
       if (row.includes(0)) return null;
       const textAlign: AlignSetting = idx === 0 ? "left" : "center";
+      // const whiteSpace: WhiteSpace = "nowrap";
 
-      const cellStyle = {
+      const cellStyle: PayTableCellStyle = {
         margin: "-2px 5px",
         textAlign: textAlign,
         gridColumn: `${idx + 1}/${idx + 2}`,
         gridRow: `${rowIdx + 1}/${rowIdx + 2}`,
         zIndex: 2,
       };
-      return <div style={cellStyle}>{cell}</div>;
+      if (idx === 0) {
+        // cellStyle.maxWidth = "100px";
+        cellStyle.overflow = "hidden";
+        cellStyle.textOverflow = "ellipsis";
+        cellStyle.whiteSpace = "nowrap";
+      }
+
+      return (
+        <div style={cellStyle} key={idx}>
+          {cell}
+        </div>
+      );
     });
     return <>{cells}</>;
   });
@@ -90,7 +106,6 @@ export const PayTable = () => {
         <HighlightColumn column={betSize + 1} length={rows.length} />
         <ToggleCollapseButton
           className="material-symbols-rounded"
-          style={{ cursor: "pointer" }}
           onClick={toggleCollapse}
         >
           do_not_disturb_on
