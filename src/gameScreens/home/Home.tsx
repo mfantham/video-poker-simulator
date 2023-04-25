@@ -5,6 +5,7 @@ import { NavBar } from "./NavBar";
 import { GameSelection } from "./GameSelection";
 import { AppbarContents } from "./AppbarContents";
 import { DRAWER_WIDTH } from "./LayoutConstants";
+import { AppBarTitleHolder } from "./AppBarTitle";
 
 export const Home = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,21 +18,31 @@ export const Home = () => {
     <Box sx={{ display: "flex" }}>
       <AppBar
         position="fixed"
-        style={{
+        sx={{
           background: "linear-gradient(166deg, rgb(0, 63, 139), rgb(0 41 91))",
         }}
       >
-        <Toolbar style={{ margin: "auto" }}>
+        <Toolbar
+          sx={{
+            margin: { sm: "auto" },
+            paddingLeft: { sm: `${DRAWER_WIDTH}px` },
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{
+              mr: 2,
+              display: { sm: "none" },
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <AppbarContents />
+          <AppBarTitleHolder>
+            <AppbarContents />
+          </AppBarTitleHolder>
         </Toolbar>
       </AppBar>
       <Box

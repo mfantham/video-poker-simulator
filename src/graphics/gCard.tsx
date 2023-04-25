@@ -12,21 +12,20 @@ import Queen from "./Queen.svg";
 import { Jack } from "./Jack.jsx";
 import { GCardMini } from "./gCardMini";
 import { DRAWER_WIDTH } from "../gameScreens/home/LayoutConstants";
+import { Box } from "@mui/material";
 
-const CardDiv = styled.div<{ holdable?: boolean }>`
+const CardDiv = styled(Box)<{ holdable?: boolean }>`
   background: white;
   position: relative;
   border: black solid 4px;
   border-radius: 20px;
-  //height: 30vw;
-  //width: 123px;
   height: 100%;
   display: grid;
   user-select: none;
   ${(p) => p.holdable && "cursor: pointer;"}
 `;
 
-const HiddenDiv = styled.div`
+const BackOfCard = styled(Box)`
   background: radial-gradient(red, mediumpurple);
   position: absolute;
   inset: 3px;
@@ -138,9 +137,25 @@ export const GCard = ({
         height: { xs: "30vw", sm: `calc(0.3 * (100vw - ${DRAWER_WIDTH}px))` },
       }}
     >
-      <CardDiv onClick={holdCallback} holdable={holdable}>
+      <CardDiv
+        sx={{
+          borderRadius: {
+            xs: "3vw",
+            sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px))`,
+          },
+        }}
+        onClick={holdCallback}
+        holdable={holdable}
+      >
         {hidden ? (
-          <HiddenDiv />
+          <BackOfCard
+            sx={{
+              borderRadius: {
+                xs: "calc(3vw - 7px)",
+                sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px) - 7px)`,
+              },
+            }}
+          />
         ) : (
           <TextSpan style={{ color: suitColor }}>
             {cardValue}
