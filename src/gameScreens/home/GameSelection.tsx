@@ -1,5 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom";
 import Grid2 from "@mui/material/Unstable_Grid2";
+import styled from "styled-components";
+
 import { SelectorSVG } from "./selectors/SelectorSVG";
 import { GameVariant } from "../../types/GameVariant";
 import { PlayDeucesWild } from "../games/PlayDeucesWild";
@@ -7,9 +9,10 @@ import { HandExplorer } from "../analysis/HandExplorer";
 import { PlayJacks } from "../games/PlayJacks";
 import { AutoPlay } from "../autoplay/AutoPlay";
 import { MenuBarButtonRow } from "../menu/MenuBar";
+
 import { Help } from "./Help";
 import { CoinsPerBetButton } from "./CoinsPerBetButton";
-import styled from "styled-components";
+import { Settings } from "./Settings";
 
 const PageHolder = styled.div`
   position: absolute;
@@ -86,6 +89,7 @@ export const GameSelection = () => {
         />
         <Route path="auto" element={<AutoPlay />} />
         <Route path="analysis" element={<HandExplorer />} />
+        <Route path="settings" element={<Settings />} />
         <Route path="help" element={<Help />} />
       </Routes>
     </PageHolder>

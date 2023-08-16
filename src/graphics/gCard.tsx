@@ -22,6 +22,7 @@ const CardDiv = styled(Box)<{ holdable?: boolean }>`
   height: 100%;
   display: grid;
   user-select: none;
+  overflow: hidden;
   ${(p) => p.holdable && "cursor: pointer;"}
 `;
 
@@ -32,8 +33,11 @@ const BackOfCard = styled(Box)`
   border-radius: 13px;
 `;
 
-const TextSpan = styled.span`
-  font-size: 30px;
+const FrontOfCard = styled(Box)`
+  position: absolute;
+  inset: 0;
+  font-size: min(30px, 5vw);
+  min-width: 10vw;
 `;
 
 const gSuit = {
@@ -90,8 +94,9 @@ const GFace = ({ value }: { value: number }) => {
 const Hold = styled.div`
   position: absolute;
   bottom: 20px;
-  left: 15px;
+  left: calc(50% - 4.2vw);
   color: #003f8b;
+  font-size: 3vw;
   font-weight: bold;
   text-shadow: 0 0 0.5em #ffb851;
 `;
@@ -134,7 +139,11 @@ export const GCard = ({
     <Grid2
       xs
       sx={{
-        height: { xs: "30vw", sm: `calc(0.3 * (100vw - ${DRAWER_WIDTH}px))` },
+        height: {
+          xs: "30vw",
+          sm: `calc(0.3 * (100vw - ${DRAWER_WIDTH}px))`,
+          md: "197px",
+        },
       }}
     >
       <CardDiv
@@ -142,6 +151,7 @@ export const GCard = ({
           borderRadius: {
             xs: "3vw",
             sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px))`,
+            md: "20px",
           },
         }}
         onClick={holdCallback}
@@ -153,16 +163,17 @@ export const GCard = ({
               borderRadius: {
                 xs: "calc(3vw - 7px)",
                 sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px) - 7px)`,
+                md: "13px",
               },
             }}
           />
         ) : (
-          <TextSpan style={{ color: suitColor }}>
+          <FrontOfCard style={{ color: suitColor }}>
             {cardValue}
             {suitSymbol}
             <GFace value={card.value} />
             {holdable && hold && <Hold>HOLD</Hold>}
-          </TextSpan>
+          </FrontOfCard>
         )}
       </CardDiv>
     </Grid2>

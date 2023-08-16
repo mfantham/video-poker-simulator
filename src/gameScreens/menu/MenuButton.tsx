@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect } from "react";
+import { CSSProperties, ReactNode, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 const BUTTON_WIDTH = "130px";
@@ -49,6 +49,7 @@ export const MenuButton = ({
   lockedOn = false,
   keyCode,
   title = "",
+  style,
 }: {
   onClick: () => any;
   children: ReactNode | ReactNode[];
@@ -56,6 +57,7 @@ export const MenuButton = ({
   lockedOn?: boolean;
   keyCode?: string | string[];
   title?: string;
+  style?: CSSProperties;
 }) => {
   const handleKeyUp = useCallback(
     (e: KeyboardEvent) => {
@@ -79,7 +81,7 @@ export const MenuButton = ({
   }, [handleKeyUp]);
 
   return (
-    <BackgroundButton>
+    <BackgroundButton style={style}>
       <ForegroundButton
         onClick={disabled ? () => null : onClick}
         disabled={disabled}

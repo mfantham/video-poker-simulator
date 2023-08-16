@@ -14,6 +14,11 @@ const HandHolder = styled.div<{ mini: boolean }>`
   margin: auto;
 `;
 
+const HandHolder2 = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const GHand = ({
   hand,
   editable = false,
@@ -76,7 +81,14 @@ export const GHand = ({
   }
 
   return (
-    <Grid2 container spacing={1}>
+    <Grid2
+      container
+      spacing={{ xs: 0.5, sm: 1 }}
+      sx={{
+        maxWidth: { md: "650px" },
+        marginLeft: { md: "calc(50% - 650px / 2)" },
+      }}
+    >
       {cards}
     </Grid2>
   );

@@ -10,6 +10,7 @@ const PAY_COLUMNS = new Array(5).fill(PAY_COLUMN_WIDTH).join(" ");
 
 const PayTableElement = styled.div`
   display: grid;
+  backdrop-filter: brightness(0.5);
   max-width: 655px;
   border: 2px solid yellow;
   grid-template-columns: 1fr ${PAY_COLUMNS};
