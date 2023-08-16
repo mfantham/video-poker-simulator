@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
 import styled from "styled-components";
+import Grid2 from "@mui/material/Unstable_Grid2";
+
 import { Card } from "../types/card";
 import { valueToFaceCard } from "../utils/valueToFaceCard";
 import { useVariant } from "../redux/hooks";
@@ -9,28 +11,33 @@ import King from "./King.svg";
 import Queen from "./Queen.svg";
 import { Jack } from "./Jack.jsx";
 import { GCardMini } from "./gCardMini";
+import { DRAWER_WIDTH } from "../gameScreens/home/LayoutConstants";
+import { Box } from "@mui/material";
 
-const CardDiv = styled.div<{ holdable?: boolean }>`
+const CardDiv = styled(Box)<{ holdable?: boolean }>`
   background: white;
   position: relative;
   border: black solid 4px;
   border-radius: 20px;
-  height: 200px;
-  width: 123px;
+  height: 100%;
   display: grid;
   user-select: none;
+  overflow: hidden;
   ${(p) => p.holdable && "cursor: pointer;"}
 `;
 
-const HiddenDiv = styled.div`
+const BackOfCard = styled(Box)`
   background: radial-gradient(red, mediumpurple);
   position: absolute;
   inset: 3px;
   border-radius: 13px;
 `;
 
-const TextSpan = styled.span`
-  font-size: 30px;
+const FrontOfCard = styled(Box)`
+  position: absolute;
+  inset: 0;
+  font-size: min(30px, 5vw);
+  min-width: 10vw;
 `;
 
 const gSuit = {
@@ -87,8 +94,9 @@ const GFace = ({ value }: { value: number }) => {
 const Hold = styled.div`
   position: absolute;
   bottom: 20px;
-  left: 15px;
+  left: calc(50% - 4.2vw);
   color: #003f8b;
+  font-size: 3vw;
   font-weight: bold;
   text-shadow: 0 0 0.5em #ffb851;
 `;
@@ -128,17 +136,46 @@ export const GCard = ({
   }
 
   return (
-    <CardDiv onClick={holdCallback} holdable={holdable}>
-      {hidden ? (
-        <HiddenDiv />
-      ) : (
-        <TextSpan style={{ color: suitColor }}>
-          {cardValue}
-          {suitSymbol}
-          <GFace value={card.value} />
-          {holdable && hold && <Hold>HOLD</Hold>}
-        </TextSpan>
-      )}
-    </CardDiv>
+    <Grid2
+      xs
+      sx={{
+        height: {
+          xs: "30vw",
+          sm: `calc(0.3 * (100vw - ${DRAWER_WIDTH}px))`,
+          md: "197px",
+        },
+      }}
+    >
+      <CardDiv
+        sx={{
+          borderRadius: {
+            xs: "3vw",
+            sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px))`,
+            md: "20px",
+          },
+        }}
+        onClick={holdCallback}
+        holdable={holdable}
+      >
+        {hidden ? (
+          <BackOfCard
+            sx={{
+              borderRadius: {
+                xs: "calc(3vw - 7px)",
+                sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px) - 7px)`,
+                md: "13px",
+              },
+            }}
+          />
+        ) : (
+          <FrontOfCard style={{ color: suitColor }}>
+            {cardValue}
+            {suitSymbol}
+            <GFace value={card.value} />
+            {holdable && hold && <Hold>HOLD</Hold>}
+          </FrontOfCard>
+        )}
+      </CardDiv>
+    </Grid2>
   );
 };

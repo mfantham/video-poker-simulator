@@ -9,13 +9,14 @@ export const BetIncrementButtons = () => {
 
   const enabled = stage === Stages.PAID || stage === Stages.PREGAME;
 
+  // These are the opposite way round to expected because of row-reverse above
   return (
     <>
-      <MenuButton disabled={!enabled} onClick={incrementBet} keyCode={"KeyN"}>
-        bet one
-      </MenuButton>
       <MenuButton disabled={!enabled} onClick={setMaxBet} keyCode={"KeyM"}>
         bet max
+      </MenuButton>
+      <MenuButton disabled={!enabled} onClick={incrementBet} keyCode={"KeyN"}>
+        bet one
       </MenuButton>
     </>
   );

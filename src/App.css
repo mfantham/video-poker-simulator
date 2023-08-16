@@ -13,7 +13,7 @@
   }
 }
 
-.App-header {
+.App-holder {
   background: linear-gradient(172deg, #003f8b, #33002f);
   min-height: 100vh;
   display: flex;

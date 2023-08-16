@@ -4,7 +4,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { NavBar } from "./NavBar";
 import { GameSelection } from "./GameSelection";
 import { AppbarContents } from "./AppbarContents";
-const drawerWidth = 240;
+import { DRAWER_WIDTH } from "./LayoutConstants";
+import { AppBarTitleHolder } from "./AppBarTitle";
 
 export const Home = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -18,26 +19,35 @@ export const Home = () => {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          background: "linear-gradient(166deg, rgb(0, 63, 139), rgb(0 41 91))",
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            margin: { sm: "auto" },
+            paddingLeft: { sm: `${DRAWER_WIDTH}px` },
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{
+              mr: 2,
+              display: { sm: "none" },
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <AppbarContents />
+          <AppBarTitleHolder>
+            <AppbarContents />
+          </AppBarTitleHolder>
         </Toolbar>
       </AppBar>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
       >
         {/* Mobile drawer */}
         <Drawer
@@ -52,7 +62,7 @@ export const Home = () => {
             display: { xs: "block", sm: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: drawerWidth,
+              width: DRAWER_WIDTH,
               background: "none",
               backdropFilter: "blur(10px)",
             },
@@ -67,7 +77,7 @@ export const Home = () => {
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: drawerWidth,
+              width: DRAWER_WIDTH,
               background: "none",
             },
           }}
@@ -82,7 +92,8 @@ export const Home = () => {
           flexGrow: 1,
           p: 3,
           position: "fixed",
-          inset: `64px 0 0 ${drawerWidth}px`,
+          inset: "64px 0 0 0",
+          left: { sm: `${DRAWER_WIDTH}px` },
         }}
       >
         <Toolbar />
