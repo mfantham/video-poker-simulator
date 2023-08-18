@@ -16,6 +16,7 @@ const ForegroundButton = styled.div<{ disabled: boolean; lockedOn: boolean }>`
   z-index: 1;
   user-select: none;
   pointer-events: ${(p) => (p.disabled ? "none" : "auto")};
+  text-wrap: nowrap;
 
   color: blue;
   -webkit-text-stroke-width: 1px;
@@ -36,6 +37,7 @@ const BackgroundButton = styled.div`
   z-index: 0;
   background: linear-gradient(166deg, #fff700, #ffbd00);
   pointer-events: none;
+  overflow: hidden;
 
   &:has(div:active) {
     background: linear-gradient(166deg, #eee600, #eeac00);

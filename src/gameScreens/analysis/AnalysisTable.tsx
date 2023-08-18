@@ -1,17 +1,30 @@
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+
 import { PrettyPrintAnalysis } from "./PrettyPrintAnalysis";
-import React, { useEffect, useState } from "react";
 import { evaluateHand } from "../../strategy/evaluateHand";
 import { HoldsTable } from "../../types/Hold";
 import { useVariant } from "../../redux/hooks";
 import { SortIndex } from "../../types/SortIndex";
 import { handIdxToHand } from "../../utils/handIdxToHand";
 
+const AnalysisTimeHolder = styled.div`
+  position: absolute;
+  bottom: 0;
+  backdrop-filter: blur(10px);
+  width: 100%;
+`;
+
 const AnalysisTime = ({ showTime = false, analysisTime = 0 }) => {
   if (!showTime) return null;
   if (analysisTime === 0) {
-    return <p>Analysing ...</p>;
+    return <AnalysisTimeHolder>Analysing ...</AnalysisTimeHolder>;
   }
-  return <p>Analysis took {(analysisTime / 1000).toFixed(3)} s</p>;
+  return (
+    <AnalysisTimeHolder>
+      Analysis took {(analysisTime / 1000).toFixed(3)} s
+    </AnalysisTimeHolder>
+  );
 };
 
 export const AnalysisTable = ({

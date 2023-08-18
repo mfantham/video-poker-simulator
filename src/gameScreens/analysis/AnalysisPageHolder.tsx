@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
 export const AnalysisPageHolder = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: 1fr;
+  position: absolute;
+  inset: 0;
 `;
 
 export const AnalysisHeaderHolder = styled.div`

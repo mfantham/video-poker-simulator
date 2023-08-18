@@ -37,7 +37,6 @@ const FrontOfCard = styled(Box)`
   position: absolute;
   inset: 0;
   font-size: min(30px, 5vw);
-  min-width: 10vw;
 `;
 
 const gSuit = {
@@ -152,6 +151,11 @@ export const GCard = ({
             xs: "3vw",
             sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px))`,
             md: "20px",
+          },
+          width: {
+            xs: "calc(0.62 * 30vw)",
+            sm: `calc(0.62 * calc(0.3 * (100vw - ${DRAWER_WIDTH}px)))`,
+            md: "calc(0.62 * 197px)",
           },
         }}
         onClick={holdCallback}
