@@ -4,19 +4,19 @@ import {
   useBetSize,
   useCoinsPerBet,
   useCurrentHand,
-  useDeck,
   useDecrement,
   useHolds,
   useIncrement,
   useResetHolds,
   useSetCurrentHand,
+  useSetDealtHand,
   useSetDeck,
   useSetStage,
   useSetWin,
   useStage,
   useVariant,
 } from "../../redux/hooks";
-import { deal } from "../../mechanics/deal";
+import { deal, newDeck, shuffle } from "../../mechanics/deal";
 import { Hand } from "../../types/hand";
 import { calculateWins, payout } from "../../payoutCalculations";
 import { MenuButton } from "./MenuButton";
@@ -27,7 +27,7 @@ export const DealButton = () => {
   const setCurrentHand = useSetCurrentHand();
   const currentHand = useCurrentHand();
   const setCurrentDeck = useSetDeck();
-  const currentDeck = useDeck();
+  const setDealtHand = useSetDealtHand();
   const resetHolds = useResetHolds();
   const incrementCoins = useIncrement();
   const decrementCoins = useDecrement();
@@ -41,6 +41,7 @@ export const DealButton = () => {
     resetHolds();
     const [newDeal, deck] = deal();
     setCurrentDeck(deck);
+    setDealtHand(newDeal);
     setCurrentHand(newDeal);
     decrementCoins(betSize * coinsPerBet);
     const winId = calculateWins(newDeal, variant);
@@ -53,19 +54,24 @@ export const DealButton = () => {
     resetHolds,
     setCurrentDeck,
     setCurrentHand,
+    setDealtHand,
     setStage,
     setWin,
     variant,
   ]);
 
   const handleDraw = useCallback(() => {
-    // Replace hand with n-new-cards
+    const currentIdxes = currentHand.map(({ idx }) => idx);
+
+    // for each hand:
+    const replacementOptions = shuffle(
+      newDeck().filter(({ idx }) => !currentIdxes.includes(idx))
+    );
+
     let newHand = [...currentHand] as Hand;
     for (let i = 0; i < holds.length; i++) {
       if (!holds[i]) {
-        // TODO: Better replacement strategy
-        // This is random enough for 1 hand though :)
-        newHand[i] = currentDeck[i + 5];
+        newHand[i] = replacementOptions[i];
       }
     }
     setCurrentHand(newHand);
@@ -78,7 +84,6 @@ export const DealButton = () => {
   }, [
     betSize,
     coinsPerBet,
-    currentDeck,
     currentHand,
     holds,
     incrementCoins,

@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Stages } from "../../redux/types";
 import {
-  useDealtHand,
   useFullHand,
-  useNHands,
   useSetStage,
   useShowAnalysis,
   useStage,
@@ -17,11 +15,11 @@ import { AnalysisTable } from "../analysis/AnalysisTable";
 import { SortIndex } from "../../types/SortIndex";
 import { N_HANDS } from "../../types/variant";
 
-const GameDiv = styled.div<{ nHands?: N_HANDS }>`
+const GameDiv = styled.div`
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-rows: repeat(${(p) => (p.nHands ?? 1) + 2}, auto) 1fr;
+  grid-template-rows: auto auto auto 1fr;
   grid-template-columns: 1fr;
 `;
 
@@ -29,34 +27,32 @@ export interface GameScreenProps {
   nHands?: N_HANDS;
 }
 
-export const GameScreen = () => {
+export const MultiGameScreen = ({ nHands = N_HANDS.ONE }: GameScreenProps) => {
   const setStage = useSetStage();
   const stage = useStage();
-  const { hand } = useFullHand();
-  const dealtHand = useDealtHand();
+  const { hand, handIdx, handSortOrder } = useFullHand();
   const showAnalysis = useShowAnalysis();
-  const nHands = useNHands();
 
-  const analysisHandIdx = dealtHand.handIdx;
-  const analysisHandSortOrder = dealtHand.handSortOrder;
+  const [analysisHandIdx, setAnalysisHandIdx] = useState<number>(handIdx);
+  const [analysisHandSortOrder, setAnalysisHandSortOrder] =
+    useState<SortIndex>(handSortOrder);
 
-  console.log(dealtHand);
+  useEffect(() => {
+    if (stage === Stages.DEALT) {
+      // Only update analysis table on deal
+      setAnalysisHandIdx(handIdx);
+      setAnalysisHandSortOrder(handSortOrder);
+    }
+  }, [stage, handIdx, handSortOrder]);
 
   useEffect(() => {
     setStage(Stages.PREGAME);
   }, [setStage]);
 
   return (
-    <GameDiv nHands={nHands}>
-      <PayTable />
+    <GameDiv>
       <GameStatus />
       <HandDealer hand={hand} nHands={nHands} />
-      {showAnalysis && (
-        <AnalysisTable
-          handIdx={analysisHandIdx}
-          handSortOrder={analysisHandSortOrder}
-        />
-      )}
       <MenuBar />
     </GameDiv>
   );

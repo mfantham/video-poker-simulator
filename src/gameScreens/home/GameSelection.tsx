@@ -13,6 +13,7 @@ import { MenuBarButtonRow } from "../menu/MenuBar";
 import { Help } from "./Help";
 import { CoinsPerBetButton } from "./CoinsPerBetButton";
 import { Settings } from "./Settings";
+import { N_HANDS } from "../../types/variant";
 
 const PageHolder = styled.div`
   position: absolute;
@@ -45,7 +46,10 @@ const games: Games = {
     { route: `/single/deuces`, variant: GameVariant.DEUCES_WILD },
     { route: `/single/jacks`, variant: GameVariant.JACKS_OR_BETTER },
   ],
-  triplePlay: [],
+  triplePlay: [
+    { route: `/triple/deuces`, variant: GameVariant.DEUCES_WILD },
+    { route: `/triple/jacks`, variant: GameVariant.JACKS_OR_BETTER },
+  ],
   fivePlay: [],
   tenPlay: [],
 };
@@ -78,14 +82,22 @@ export const GameSelection = () => {
       <Routes>
         <Route path="" element={<GameSelectors multiOption={"singlePlay"} />} />
         <Route
-          path="single"
+          path="/single"
           element={<GameSelectors multiOption={"singlePlay"} />}
         />
         <Route path="/single/deuces" element={<PlayDeucesWild />} />
         <Route path="/single/jacks" element={<PlayJacks />} />
         <Route
-          path="triple"
+          path="/triple"
           element={<GameSelectors multiOption={"triplePlay"} />}
+        />
+        <Route
+          path="/triple/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.THREE} />}
+        />
+        <Route
+          path="/triple/jacks"
+          element={<PlayJacks nHands={N_HANDS.THREE} />}
         />
         <Route path="auto" element={<AutoPlay />} />
         <Route path="analysis" element={<HandExplorer />} />

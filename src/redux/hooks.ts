@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from "./store";
 import { useCallback } from "react";
-import { VARIANT } from "../types/variant";
+import { N_HANDS, VARIANT } from "../types/variant";
 import {
   decrementByAmount,
   incrementBet,
@@ -11,8 +11,10 @@ import {
   resetHolds,
   setCurrentDeck,
   setCurrentHand,
-  setCurrentHandIdx,
+  setCurrentHandByIdx,
+  setDealtHand,
   setMaxBet,
+  setNHands,
   setStage,
   setVariant,
   setWin,
@@ -33,14 +35,20 @@ export const useSetStage = () => {
 };
 
 export const useCurrentHand = () =>
-  useAppSelector((state) => state.game.currentHand.hand);
+  useAppSelector((state) => state.game.currentHands[0].hand);
+
+export const useDealtHand = () =>
+  useAppSelector((state) => state.game.dealtHandInfo);
 
 export const useFullHand = () =>
-  useAppSelector((state) => state.game.currentHand);
+  useAppSelector((state) => state.game.currentHands[0]);
 
 export const useCurrentHandIdx = () =>
-  useAppSelector((state) => state.game.currentHand.handIdx);
+  useAppSelector((state) => state.game.currentHands[0].handIdx);
+
 export const useVariant = () => useAppSelector((state) => state.game.variant);
+
+export const useNHands = () => useAppSelector((state) => state.game.nHands);
 
 export const useSetCurrentHand = () => {
   const dispatch = useAppDispatch();
@@ -53,11 +61,22 @@ export const useSetCurrentHand = () => {
   );
 };
 
+export const useSetDealtHand = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (hand: Hand) => {
+      dispatch(setDealtHand(hand));
+    },
+    [dispatch]
+  );
+};
+
 export const useSetCurrentHandIdx = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (handIdx: number) => dispatch(setCurrentHandIdx(handIdx)),
+    (handIdx: number) => dispatch(setCurrentHandByIdx(handIdx)),
     [dispatch]
   );
 };
@@ -67,6 +86,15 @@ export const useSetVariant = () => {
 
   return useCallback(
     (variant: VARIANT) => dispatch(setVariant(variant)),
+    [dispatch]
+  );
+};
+
+export const useSetNHands = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (nHands: N_HANDS) => dispatch(setNHands(nHands)),
     [dispatch]
   );
 };
