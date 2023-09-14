@@ -3,7 +3,7 @@ import { Suit } from "../types/suit";
 import { Card } from "../types/card";
 import { Deck } from "../types/deck";
 
-const shuffle = (deck: Deck): Deck => {
+export const shuffle = (deck: Deck): Deck => {
   const shuffled = deck.slice();
   let i = deck.length;
   while (i--) {

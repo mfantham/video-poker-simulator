@@ -50,6 +50,8 @@ export const SynthEngine = () => {
     osc.stop(audioCtx.currentTime + 0.3);
   }, [volume]);
 
+  const individualHandWin = winOnTheDeal;
+
   const payOut = useCallback(
     async (e: Event) => {
       const n = (e as CustomEvent).detail;
@@ -73,17 +75,41 @@ export const SynthEngine = () => {
     [volume]
   );
 
+  const payoutStep = useCallback(
+    async (e: Event) => {
+      const step = (e as CustomEvent).detail;
+      const audioCtx = audioContext.current;
+      if (!audioCtx || volume === 0) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(volume * 0.5, audioCtx.currentTime);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      const noteNumber = step % 24;
+      osc.frequency.value = 200 * Math.pow(2, noteNumber / 12);
+      await sleep(100);
+      osc.stop();
+    },
+    [volume]
+  );
+
   useEffect(() => {
     window.addEventListener("deal-card", dealCard);
     window.addEventListener("win-on-the-deal", winOnTheDeal);
+    window.addEventListener("individual-hand-win", individualHandWin);
     window.addEventListener("pay-out", payOut);
+    window.addEventListener("payout-step", payoutStep);
 
     return () => {
       window.removeEventListener("deal-card", dealCard);
       window.removeEventListener("win-on-the-deal", winOnTheDeal);
+      window.removeEventListener("individual-hand-win", individualHandWin);
       window.removeEventListener("pay-out", payOut);
+      window.removeEventListener("payout-step", payoutStep);
     };
-  }, [dealCard, payOut, winOnTheDeal]);
+  }, [dealCard, individualHandWin, payOut, winOnTheDeal]);
 
   return null;
 };

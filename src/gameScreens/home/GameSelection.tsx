@@ -13,6 +13,7 @@ import { MenuBarButtonRow } from "../menu/MenuBar";
 import { Help } from "./Help";
 import { CoinsPerBetButton } from "./CoinsPerBetButton";
 import { Settings } from "./Settings";
+import { N_HANDS } from "../../types/variant";
 
 const PageHolder = styled.div`
   position: absolute;
@@ -45,9 +46,12 @@ const games: Games = {
     { route: `/single/deuces`, variant: GameVariant.DEUCES_WILD },
     { route: `/single/jacks`, variant: GameVariant.JACKS_OR_BETTER },
   ],
-  triplePlay: [],
-  fivePlay: [],
-  tenPlay: [],
+  triplePlay: [
+    { route: `/triple/deuces`, variant: GameVariant.DEUCES_WILD },
+    { route: `/triple/jacks`, variant: GameVariant.JACKS_OR_BETTER },
+  ],
+  fivePlay: [{ route: `/five/deuces`, variant: GameVariant.DEUCES_WILD }],
+  tenPlay: [{ route: `/ten/deuces`, variant: GameVariant.DEUCES_WILD }],
 };
 
 const GameSelectors = ({
@@ -78,14 +82,38 @@ export const GameSelection = () => {
       <Routes>
         <Route path="" element={<GameSelectors multiOption={"singlePlay"} />} />
         <Route
-          path="single"
+          path="/single"
           element={<GameSelectors multiOption={"singlePlay"} />}
         />
         <Route path="/single/deuces" element={<PlayDeucesWild />} />
         <Route path="/single/jacks" element={<PlayJacks />} />
         <Route
-          path="triple"
+          path="/triple"
           element={<GameSelectors multiOption={"triplePlay"} />}
+        />
+        <Route
+          path="/triple/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.THREE} />}
+        />
+        <Route
+          path="/triple/jacks"
+          element={<PlayJacks nHands={N_HANDS.THREE} />}
+        />
+        <Route
+          path="/five"
+          element={<GameSelectors multiOption={"fivePlay"} />}
+        />
+        <Route
+          path="/five/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.FIVE} />}
+        />
+        <Route
+          path="/ten"
+          element={<GameSelectors multiOption={"tenPlay"} />}
+        />
+        <Route
+          path="/ten/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.TEN} />}
         />
         <Route path="auto" element={<AutoPlay />} />
         <Route path="analysis" element={<HandExplorer />} />

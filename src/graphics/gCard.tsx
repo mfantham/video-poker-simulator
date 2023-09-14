@@ -134,15 +134,14 @@ export const GCard = ({
     );
   }
 
+  // The card size should be based solely on its container.
+  // Then the container can be based on screen size, grids, etc
+
   return (
     <Grid2
-      xs
       sx={{
-        height: {
-          xs: "30vw",
-          sm: `calc(0.3 * (100vw - ${DRAWER_WIDTH}px))`,
-          md: "197px",
-        },
+        width: "19%",
+        aspectRatio: "0.666",
       }}
     >
       <CardDiv
@@ -152,11 +151,7 @@ export const GCard = ({
             sm: `calc(0.03 * (100vw - ${DRAWER_WIDTH}px))`,
             md: "20px",
           },
-          width: {
-            xs: "calc(0.62 * 30vw)",
-            sm: `calc(0.62 * calc(0.3 * (100vw - ${DRAWER_WIDTH}px)))`,
-            md: "calc(0.62 * 197px)",
-          },
+          width: "100%",
         }}
         onClick={holdCallback}
         holdable={holdable}
