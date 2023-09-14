@@ -11,6 +11,7 @@ import {
   resetHolds,
   setCurrentDeck,
   setCurrentHand,
+  setCurrentHands,
   setCurrentHandByIdx,
   setDealtHand,
   setMaxBet,
@@ -20,10 +21,14 @@ import {
   setWin,
   toggleHold,
   toggleShowAnalysis,
+  setPayout,
+  setWins,
+  clearWins,
 } from "./reducers";
 import { Hand } from "../types/hand";
 import { Stages } from "./types";
 import { Deck } from "../types/deck";
+import { sleep } from "../utils/sleep";
 
 export const useStage = () => useAppSelector((state) => state.game.stage);
 export const useSetStage = () => {
@@ -36,6 +41,9 @@ export const useSetStage = () => {
 
 export const useCurrentHand = () =>
   useAppSelector((state) => state.game.currentHands[0].hand);
+
+export const useCurrentHands = () =>
+  useAppSelector((state) => state.game.currentHands);
 
 export const useDealtHand = () =>
   useAppSelector((state) => state.game.dealtHandInfo);
@@ -56,6 +64,17 @@ export const useSetCurrentHand = () => {
   return useCallback(
     (hand: Hand) => {
       dispatch(setCurrentHand(hand));
+    },
+    [dispatch]
+  );
+};
+
+export const useSetCurrentHands = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (hands: Hand[]) => {
+      dispatch(setCurrentHands(hands));
     },
     [dispatch]
   );
@@ -126,10 +145,19 @@ export const useIncrement = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (v: number) => dispatch(incrementByAmount(v ?? 1)),
+    async (v: number) => {
+      dispatch(setPayout(v ?? 1));
+
+      const steps = v ?? 1;
+      for (let i = 0; i < steps; i++) {
+        dispatch(incrementByAmount(1));
+        await sleep(100);
+      }
+    },
     [dispatch]
   );
 };
+
 export const useDecrement = () => {
   const dispatch = useAppDispatch();
 
@@ -142,10 +170,41 @@ export const useDecrement = () => {
 export const useSetWin = () => {
   const dispatch = useAppDispatch();
 
-  return useCallback((winId: number) => dispatch(setWin(winId)), [dispatch]);
+  return useCallback(
+    (winId: number) => dispatch(setWin({ winId, handIdx: 0 })),
+    [dispatch]
+  );
 };
 
-export const useWin = () => useAppSelector((state) => state.game.win);
+export const useSetWinN = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (winId: number, handIdx: number) => dispatch(setWin({ winId, handIdx })),
+    [dispatch]
+  );
+};
+
+export const useSetWins = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (winIds: number[]) => dispatch(setWins(winIds)),
+    [dispatch]
+  );
+};
+
+export const useClearWins = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => {
+    dispatch(clearWins());
+  }, [dispatch]);
+};
+
+export const useWin = () => useAppSelector((state) => state.game.wins[0]);
+export const useWins = () => useAppSelector((state) => state.game.wins);
+export const usePay = () => useAppSelector((state) => state.game.pay);
 
 export const useBetSize = () => useAppSelector((state) => state.game.betSize);
 export const useCoinsPerBet = () =>

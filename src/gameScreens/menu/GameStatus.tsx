@@ -1,9 +1,12 @@
 import { Stages } from "../../redux/types";
-import { useBetSize, useStage, useWin } from "../../redux/hooks";
+import { useBetSize, useNHands, useStage, useWin } from "../../redux/hooks";
+import { N_HANDS } from "../../types/variant";
 
 export const GameStatus = () => {
   const stage = useStage();
   const { winAmount, winName } = useWin();
+  const nHands = useNHands();
+
   const betSize = useBetSize();
   const winPay = betSize * winAmount;
 
@@ -18,6 +21,9 @@ export const GameStatus = () => {
       return <div>&nbsp;</div>;
     case Stages.PAYING:
     case Stages.PAID:
+      if (nHands > N_HANDS.ONE) {
+        return <div>&nbsp;</div>;
+      }
       if (winAmount) {
         return (
           <div>

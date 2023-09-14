@@ -18,3 +18,9 @@ export type HandInfo = {
   sortedHand: Hand;
   handSortOrder: SortIndex;
 };
+
+export type Win = {
+  winId: number;
+  winAmount: number;
+  winName: string;
+};

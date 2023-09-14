@@ -4,9 +4,11 @@ import styled from "styled-components";
 import { PrettyPrintAnalysis } from "./PrettyPrintAnalysis";
 import { evaluateHand } from "../../strategy/evaluateHand";
 import { HoldsTable } from "../../types/Hold";
-import { useVariant } from "../../redux/hooks";
+import { useNHands, useVariant } from "../../redux/hooks";
 import { SortIndex } from "../../types/SortIndex";
 import { handIdxToHand } from "../../utils/handIdxToHand";
+import { N_HANDS } from "../../types/variant";
+import { Dialog } from "@mui/material";
 
 const AnalysisTimeHolder = styled.div`
   position: absolute;
@@ -38,6 +40,7 @@ export const AnalysisTable = ({
 }) => {
   const variant = useVariant();
   const sortedHand = handIdxToHand(handIdx);
+  const nHands = useNHands();
 
   const [analysis, setAnalysis] = useState([] as HoldsTable);
   const [analysisTime, setAnalysisTime] = useState(0);
@@ -52,6 +55,18 @@ export const AnalysisTable = ({
       setAnalysis(analysisTable);
     });
   }, [variant, handIdx]);
+
+  if (nHands > N_HANDS.ONE) {
+    return (
+      <Dialog open={true}>
+        <PrettyPrintAnalysis
+          analysisTable={analysis}
+          holdsOrder={handSortOrder}
+          sortedHand={sortedHand}
+        />
+      </Dialog>
+    );
+  }
 
   return (
     <>

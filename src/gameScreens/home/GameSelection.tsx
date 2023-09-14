@@ -50,8 +50,8 @@ const games: Games = {
     { route: `/triple/deuces`, variant: GameVariant.DEUCES_WILD },
     { route: `/triple/jacks`, variant: GameVariant.JACKS_OR_BETTER },
   ],
-  fivePlay: [],
-  tenPlay: [],
+  fivePlay: [{ route: `/five/deuces`, variant: GameVariant.DEUCES_WILD }],
+  tenPlay: [{ route: `/ten/deuces`, variant: GameVariant.DEUCES_WILD }],
 };
 
 const GameSelectors = ({
@@ -98,6 +98,22 @@ export const GameSelection = () => {
         <Route
           path="/triple/jacks"
           element={<PlayJacks nHands={N_HANDS.THREE} />}
+        />
+        <Route
+          path="/five"
+          element={<GameSelectors multiOption={"fivePlay"} />}
+        />
+        <Route
+          path="/five/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.FIVE} />}
+        />
+        <Route
+          path="/ten"
+          element={<GameSelectors multiOption={"tenPlay"} />}
+        />
+        <Route
+          path="/ten/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.TEN} />}
         />
         <Route path="auto" element={<AutoPlay />} />
         <Route path="analysis" element={<HandExplorer />} />

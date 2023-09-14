@@ -4,12 +4,11 @@ import { Deck } from "../types/deck";
 import { Hand } from "../types/hand";
 import { deal } from "../mechanics/deal";
 import { N_HANDS, VARIANT } from "../types/variant";
-import { HandInfo, Stages } from "./types";
+import { HandInfo, Stages, Win } from "./types";
 import { handToHandIdx } from "../utils/handToHandIdx";
 import { winName, payout } from "../payoutCalculations";
 import { handIdxToHand } from "../utils/handIdxToHand";
 import { sortHand } from "../utils/sortHand";
-import { SortIndex } from "../types/SortIndex";
 
 const MAX_BET = 5;
 const COINS_PER_BET_ORDER = [0.25, 0.5, 1, 2, 5];
@@ -25,10 +24,10 @@ interface AppState {
   dealtHandInfo: HandInfo;
   holds: Array<boolean>;
   stage: Stages;
-  win: {
-    winId: number;
-    winAmount: number;
-    winName: string;
+  wins: Win[];
+  pay: {
+    payAmount: number;
+    payRemaining: number;
   };
   showAnalysis: boolean;
   speed: number;
@@ -62,7 +61,8 @@ export const initialState: AppState = {
   },
   holds: [false, false, false, false, false],
   stage: Stages.PREGAME,
-  win: { winId: 0, winAmount: 0, winName: "" },
+  wins: [{ winId: 0, winAmount: 0, winName: "" }],
+  pay: { payAmount: 0, payRemaining: 0 },
   showAnalysis: false,
   speed: 2,
   volume: 1,
@@ -137,12 +137,32 @@ export const gameSlice = createSlice({
     toggleHold: (state, { payload: idx }) => {
       state.holds[idx] = !state.holds[idx];
     },
-    setWin: (state, { payload: winId }: { payload: number }) => {
+    setWin: (
+      state,
+      {
+        payload: { winId, handIdx },
+      }: { payload: { winId: number; handIdx?: number } }
+    ) => {
       // @ts-ignore
       const winAmount = payout(winId, state.variant);
       // @ts-ignore: winId is a number, not the required enum
       const name = winName(winId, state.variant);
-      state.win = { winId, winAmount, winName: name };
+      state.wins[handIdx ?? 0] = { winId, winAmount, winName: name };
+    },
+    setWins: (state, { payload: winIds }: { payload: number[] }) => {
+      winIds.forEach((winId, idx) => {
+        // @ts-ignore
+        const winAmount = payout(winId, state.variant);
+        // @ts-ignore: winId is a number, not the required enum
+        const name = winName(winId, state.variant);
+        state.wins[idx] = { winId, winAmount, winName: name };
+      });
+    },
+    clearWins: (state) => {
+      state.wins = [];
+    },
+    setPayout: (state, { payload: payoutAmount }: { payload: number }) => {
+      state.pay = { payAmount: payoutAmount, payRemaining: payoutAmount };
     },
     incrementBet: (state) => {
       const incremented = state.betSize + 1;
@@ -181,12 +201,16 @@ export const {
   setNHands,
   setCurrentHand,
   setCurrentHandByIdx,
+  setCurrentHands,
   setDealtHand,
   setCurrentDeck,
   setStage,
   resetHolds,
   toggleHold,
   setWin,
+  setWins,
+  clearWins,
+  setPayout,
   setMaxBet,
   incrementBet,
   incrementCoinsPerBet,

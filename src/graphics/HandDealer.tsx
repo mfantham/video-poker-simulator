@@ -1,34 +1,34 @@
 import {
-  useBetSize,
+  useCurrentHands,
   useHolds,
+  usePay,
   useSetStage,
+  useSetWinN,
   useSpeed,
   useStage,
-  useWin,
+  useVariant,
+  useWins,
 } from "../redux/hooks";
 import { useCallback, useEffect, useState } from "react";
 import { GHand } from "./gHand";
 import { Stages } from "../redux/types";
-import { Hand } from "../types/hand";
 import { HidePattern } from "../types/HidePattern";
 import { sleep } from "../utils/sleep";
 import { N_HANDS } from "../types/variant";
+import { calculateWins } from "../payoutCalculations";
+import { MultiHandHolder } from "./MultiHandHolder";
 
-export const HandDealer = ({
-  hand,
-  nHands = 1,
-}: {
-  hand: Hand;
-  nHands?: N_HANDS;
-}) => {
+export const HandDealer = ({ nHands = 1 }: { nHands?: N_HANDS }) => {
   const speed = useSpeed();
   const stage = useStage();
   const holds = useHolds();
   const setStage = useSetStage();
+  const hands = useCurrentHands();
+  const variant = useVariant();
 
-  const { winAmount } = useWin();
-  const betSize = useBetSize();
-  const winPay = betSize * winAmount;
+  const wins = useWins();
+  const setWinN = useSetWinN();
+  const { payAmount } = usePay();
 
   const TIMEOUT = 300 / (1 + speed);
 
@@ -77,9 +77,14 @@ export const HandDealer = ({
           setHides(newHides);
         }
       }
+      const isWin = calculateWins(hands[h].hand, variant);
+      if (!!isWin) {
+        dispatchEvent(new CustomEvent("individual-hand-win"));
+        setWinN(isWin, h);
+      }
     }
     setStage(Stages.PAYING);
-  }, [holds, nHands, setStage, TIMEOUT]);
+  }, [holds, nHands, setStage, hands, variant, TIMEOUT, setWinN]);
 
   useEffect(() => {
     switch (stage) {
@@ -97,8 +102,8 @@ export const HandDealer = ({
         dealHoldReplacements();
         break;
       case Stages.PAYING:
-        if (winPay > 0) {
-          dispatchEvent(new CustomEvent("pay-out", { detail: winPay }));
+        if (payAmount > 0) {
+          dispatchEvent(new CustomEvent("pay-out", { detail: payAmount }));
         }
         setStage(Stages.PAID);
         break;
@@ -108,18 +113,14 @@ export const HandDealer = ({
     dealHoldReplacements,
     holds,
     nHands,
+    payAmount,
     setStage,
     speed,
     stage,
-    winPay,
   ]);
 
-  const multiHands: Array<Hand> = new Array(nHands).fill(0).map((_, idx) => {
-    // Something more interesting soon!
-    return [...hand];
-  });
-
-  const outHands = multiHands.map((handN, idx) => {
+  const outHands = hands.map((handInfo, idx) => {
+    const handN = stage === Stages.DEALT ? hands[0].hand : handInfo.hand;
     let hidePattern = hides[idx];
     if (idx !== 0) {
       if (stage === Stages.DEALT) {
@@ -129,6 +130,13 @@ export const HandDealer = ({
       }
     }
 
+    const win =
+      wins[idx]?.winAmount > 0 &&
+      stage >= Stages.DEALING &&
+      hidePattern.every((h) => !h)
+        ? wins[idx]
+        : undefined;
+
     return (
       <GHand
         key={idx}
@@ -136,9 +144,10 @@ export const HandDealer = ({
         editable={false}
         hide={hidePattern}
         holdable={stage === Stages.DEALT}
+        win={win}
       />
     );
   });
 
-  return <>{outHands}</>;
+  return <MultiHandHolder nHands={nHands}>{outHands}</MultiHandHolder>;
 };

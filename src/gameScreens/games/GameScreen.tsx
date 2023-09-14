@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { Stages } from "../../redux/types";
 import {
   useDealtHand,
-  useFullHand,
   useNHands,
   useSetStage,
   useShowAnalysis,
-  useStage,
 } from "../../redux/hooks";
 import { HandDealer } from "../../graphics/HandDealer";
 import { MenuBar } from "../menu/MenuBar";
 import { GameStatus } from "../menu/GameStatus";
 import { PayTable } from "../analysis/PayTable";
 import { AnalysisTable } from "../analysis/AnalysisTable";
-import { SortIndex } from "../../types/SortIndex";
 import { N_HANDS } from "../../types/variant";
 
 const GameDiv = styled.div<{ nHands?: N_HANDS }>`
@@ -31,16 +28,12 @@ export interface GameScreenProps {
 
 export const GameScreen = () => {
   const setStage = useSetStage();
-  const stage = useStage();
-  const { hand } = useFullHand();
   const dealtHand = useDealtHand();
   const showAnalysis = useShowAnalysis();
   const nHands = useNHands();
 
   const analysisHandIdx = dealtHand.handIdx;
   const analysisHandSortOrder = dealtHand.handSortOrder;
-
-  console.log(dealtHand);
 
   useEffect(() => {
     setStage(Stages.PREGAME);
@@ -49,8 +42,8 @@ export const GameScreen = () => {
   return (
     <GameDiv nHands={nHands}>
       <PayTable />
-      <GameStatus />
-      <HandDealer hand={hand} nHands={nHands} />
+      {nHands === N_HANDS.ONE && <GameStatus />}
+      <HandDealer nHands={nHands} />
       {showAnalysis && (
         <AnalysisTable
           handIdx={analysisHandIdx}
