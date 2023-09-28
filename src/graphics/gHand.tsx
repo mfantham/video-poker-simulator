@@ -9,10 +9,16 @@ import { HidePattern } from "../types/HidePattern";
 import { useCallback, useEffect } from "react";
 import { WinColors } from "./WinColors";
 
-const HandHolder = styled.div<{ mini: boolean }>`
+const HandHolder = styled.div<{ mini?: boolean; winName?: string }>`
   display: flex;
   gap: ${(p) => (p.mini ? "2px" : "10px")};
+  border: ${(p) =>
+    p.winName && p.mini
+      ? `5px solid ${WinColors[p.winName ?? ""] ?? "#333333"}`
+      : "none"};
   margin: auto;
+  position: relative;
+  border-radius: 10px;
 `;
 
 const WinInfo = styled.div<{ winName: string }>`
@@ -25,6 +31,23 @@ const WinInfo = styled.div<{ winName: string }>`
   backdrop-filter: blur(5px);
   color: white;
   border-radius: 20px;
+`;
+
+const MiniWinInfo = styled.div<{ winName: string }>`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-align: center;
+  justify-content: center;
+`;
+
+const MiniWinInfoText = styled.div<{ winName: string }>`
+  border-radius: 10px;
+  padding: 0 10px;
+  color: white;
+  background: #222222bb;
+  border: 5px solid ${(p) => WinColors[p.winName] ?? "#333333"};
+  margin: -5px 0;
 `;
 
 const WinAmountText = styled.div<{ winName: string }>`
@@ -44,11 +67,6 @@ const WinInfoHolder = styled.div`
   inset: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-`;
-
-const HandHolder2 = styled.div`
-  display: flex;
   justify-content: center;
 `;
 
@@ -114,7 +132,18 @@ export const GHand = ({
   });
 
   if (mini) {
-    return <HandHolder mini={mini}>{cards}</HandHolder>;
+    return (
+      <HandHolder winName={win?.winName} mini={mini}>
+        {cards}
+        {win && (
+          <MiniWinInfo winName={win.winName}>
+            <MiniWinInfoText winName={win.winName}>
+              {win.winAmount}
+            </MiniWinInfoText>
+          </MiniWinInfo>
+        )}
+      </HandHolder>
+    );
   }
 
   return (

@@ -26,6 +26,12 @@ const TenHandHolder = styled.div`
   grid-template-columns: repeat(3, 1fr);
 `;
 
+const HundredHandHolder = styled.div`
+  display: grid;
+  grid-template-rows: repeat(11, 1fr);
+  grid-template-columns: repeat(9, 1fr);
+`;
+
 export const MultiHandHolder = ({ nHands, children }: MultiHandHolderProps) => {
   const [firstHand, otherHands] = Array.isArray(children)
     ? [children[0], children.slice(1)]
@@ -33,6 +39,8 @@ export const MultiHandHolder = ({ nHands, children }: MultiHandHolderProps) => {
 
   const OtherHands = () => {
     switch (nHands) {
+      case N_HANDS.ONE_HUNDRED:
+        return <HundredHandHolder>{otherHands}</HundredHandHolder>;
       case N_HANDS.TEN:
         return <TenHandHolder>{otherHands}</TenHandHolder>;
       case N_HANDS.FIVE:
