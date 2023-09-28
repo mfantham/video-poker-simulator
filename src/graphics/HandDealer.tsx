@@ -30,7 +30,7 @@ export const HandDealer = ({ nHands = 1 }: { nHands?: N_HANDS }) => {
   const setWinN = useSetWinN();
   const { payAmount } = usePay();
 
-  const TIMEOUT = 300 / (1 + speed);
+  let TIMEOUT = 300 / (1 + speed);
 
   const [hides, setHides] = useState<Array<HidePattern>>(
     Array(nHands)
@@ -55,27 +55,41 @@ export const HandDealer = ({ nHands = 1 }: { nHands?: N_HANDS }) => {
   }, [TIMEOUT, nHands, setStage]);
 
   const dealHoldReplacements = useCallback(async () => {
-    // Need to repeat this for all nHands now.
     const flips = holds.map((v) => !v) as HidePattern;
     setHides(new Array(nHands).fill([...flips]));
     for (let h = 0; h < nHands; h++) {
-      for (let i = 0; i < 5; i++) {
-        if (flips[i]) {
-          await sleep(TIMEOUT);
-          const newHides = Array(nHands)
-            .fill([])
-            .map((_, hIdx) => {
-              const flippedHand = flips.map((flip, idx) => {
-                if (hIdx < h) return false;
-                if (hIdx > h) return flip;
-                if (flip) return idx > i;
-                else return flip;
-              }) as HidePattern;
-              dispatchEvent(new CustomEvent("deal-card"));
-              return flippedHand;
-            });
-          setHides(newHides);
+      if (nHands < N_HANDS.TEN) {
+        for (let i = 0; i < 5; i++) {
+          if (flips[i]) {
+            await sleep(TIMEOUT);
+            const newHides = Array(nHands)
+              .fill([])
+              .map((_, hIdx) => {
+                const flippedHand = flips.map((flip, idx) => {
+                  if (hIdx < h) return false;
+                  if (hIdx > h) return flip;
+                  if (flip) return idx > i;
+                  else return flip;
+                }) as HidePattern;
+                dispatchEvent(new CustomEvent("deal-card"));
+                return flippedHand;
+              });
+            setHides(newHides);
+          }
         }
+      } else {
+        await sleep(TIMEOUT);
+        const newHides = Array(nHands)
+          .fill([])
+          .map((_, hIdx) => {
+            const flippedHand = flips.map((flip) => {
+              if (hIdx <= h) return false;
+              else return flip;
+            }) as HidePattern;
+            dispatchEvent(new CustomEvent("deal-card"));
+            return flippedHand;
+          });
+        setHides(newHides);
       }
       const isWin = calculateWins(hands[h].hand, variant);
       if (!!isWin) {
@@ -133,9 +147,12 @@ export const HandDealer = ({ nHands = 1 }: { nHands?: N_HANDS }) => {
     const win =
       wins[idx]?.winAmount > 0 &&
       stage >= Stages.DEALING &&
+      nHands > N_HANDS.ONE &&
       hidePattern.every((h) => !h)
         ? wins[idx]
         : undefined;
+
+    const mini = idx !== 0 && nHands > N_HANDS.TEN;
 
     return (
       <GHand
@@ -145,6 +162,7 @@ export const HandDealer = ({ nHands = 1 }: { nHands?: N_HANDS }) => {
         hide={hidePattern}
         holdable={stage === Stages.DEALT}
         win={win}
+        mini={mini}
       />
     );
   });

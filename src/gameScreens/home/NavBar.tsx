@@ -20,6 +20,7 @@ export const NavBar = () => {
       <NavLink link={"/triple"} alt={"TRIPLE PLAY"} />
       <NavLink link={"/five"} alt={"FIVE PLAY"} />
       <NavLink link={"/ten"} alt={"TEN PLAY"} />
+      <NavLink link={"/hundred"} alt={"100 PLAY"} />
       <ListItem key="gap" disablePadding>
         <ListItemButton sx={{ pl: 4 }} />
       </ListItem>

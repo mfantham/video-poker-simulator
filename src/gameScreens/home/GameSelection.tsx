@@ -36,7 +36,12 @@ const Selector = ({
   );
 };
 
-type MultiOption = "singlePlay" | "triplePlay" | "fivePlay" | "tenPlay";
+type MultiOption =
+  | "singlePlay"
+  | "triplePlay"
+  | "fivePlay"
+  | "tenPlay"
+  | "hundredPlay";
 type Game = { route: string; variant: GameVariant; option?: MultiOption };
 type GameList = Array<Game>;
 type Games = Record<MultiOption, GameList>;
@@ -52,6 +57,7 @@ const games: Games = {
   ],
   fivePlay: [{ route: `/five/deuces`, variant: GameVariant.DEUCES_WILD }],
   tenPlay: [{ route: `/ten/deuces`, variant: GameVariant.DEUCES_WILD }],
+  hundredPlay: [{ route: `/hundred/deuces`, variant: GameVariant.DEUCES_WILD }],
 };
 
 const GameSelectors = ({
@@ -114,6 +120,14 @@ export const GameSelection = () => {
         <Route
           path="/ten/deuces"
           element={<PlayDeucesWild nHands={N_HANDS.TEN} />}
+        />
+        <Route
+          path="/hundred"
+          element={<GameSelectors multiOption={"hundredPlay"} />}
+        />
+        <Route
+          path="/hundred/deuces"
+          element={<PlayDeucesWild nHands={N_HANDS.ONE_HUNDRED} />}
         />
         <Route path="auto" element={<AutoPlay />} />
         <Route path="analysis" element={<HandExplorer />} />
