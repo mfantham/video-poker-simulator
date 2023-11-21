@@ -6,6 +6,10 @@ This simulator not only allows you to play your favorite video poker variants, b
 
 ## Getting Started
 
+To play online, visit https://poker.fnt.hm
+
+For local development, follow the instructions:
+
 ### Prerequisites
 
 Like most JavaScript/TypeScript projects, you'll need [Node.js](https://nodejs.org/en/download) installed.
