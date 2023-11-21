@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import { CssBaseline, ListItem, ListItemButton, Toolbar } from "@mui/material";
 
 const NavLink = ({ link, alt }: { link: string; alt: string }) => {
@@ -8,6 +9,24 @@ const NavLink = ({ link, alt }: { link: string; alt: string }) => {
         <ListItemButton sx={{ pl: 4 }}>{alt}</ListItemButton>
       </ListItem>
     </Link>
+  );
+};
+
+export const GithubLink = ({ link }: { link: string }) => {
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: "none", color: "white" }}
+    >
+      <ListItem key={"github"} disablePadding>
+        <ListItemButton sx={{ pl: 4 }}>
+          <GitHubIcon />
+          &nbsp; GITHUB
+        </ListItemButton>
+      </ListItem>
+    </a>
   );
 };
 
@@ -34,6 +53,7 @@ export const NavBar = () => {
         <ListItemButton sx={{ pl: 4 }} />
       </ListItem>
       <NavLink link={"/help"} alt={"HELP"} />
+      <GithubLink link={"https://github.com/mfantham/video-poker-simulator"} />
     </div>
   );
 };

@@ -65,7 +65,7 @@ export const initialState: AppState = {
   pay: { payAmount: 0, payRemaining: 0 },
   showAnalysis: false,
   speed: 2,
-  volume: 1,
+  volume: 0,
 };
 
 export const gameSlice = createSlice({
