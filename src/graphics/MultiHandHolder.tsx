@@ -28,6 +28,7 @@ const TenHandHolder = styled.div`
 
 const HundredHandHolder = styled.div`
   display: grid;
+  gap: 2px;
   grid-template-rows: repeat(11, 1fr);
   grid-template-columns: repeat(9, 1fr);
 `;

@@ -39,8 +39,8 @@ const { sortedHand: initialHandSorted, sortIndex: initialHandSortOrder } =
   sortHand(initialHand);
 
 export const initialState: AppState = {
-  variant: VARIANT.DEUCES_WILD,
-  nHands: N_HANDS.ONE,
+  variant: VARIANT.DEUCES_WILD, // TODO: Pull from url
+  nHands: N_HANDS.ONE, // TODO: Pull from url
   deck: initialDeck,
   coins: 1000,
   betSize: 1,

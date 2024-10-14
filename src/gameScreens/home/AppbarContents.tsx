@@ -3,18 +3,42 @@ import { useLocation } from "react-router-dom";
 export const AppbarContents = () => {
   const { pathname } = useLocation();
 
+  let gameName = "MF Video Poker";
+  let nHandsString = "";
+
   if (pathname.includes("analysis")) {
-    return <>Hand analyser</>;
+    gameName = "Hand analyser";
   }
   if (pathname.includes("deuces")) {
-    return <>Deuces Wild</>;
+    gameName = "Deuces Wild";
   }
   if (pathname.includes("jacks")) {
-    return <>Jacks or Better</>;
+    gameName = "Jacks or Better";
   }
   if (pathname.includes("auto")) {
-    return <>Auto Play!</>;
+    gameName = "Auto Play!";
   }
 
-  return <>MF Video Poker</>;
+  if (pathname.includes("triple")) {
+    nHandsString = "Triple Play";
+  }
+  if (pathname.includes("five")) {
+    nHandsString = "Five Play";
+  }
+  if (pathname.includes("ten")) {
+    nHandsString = "Ten Play";
+  }
+  if (pathname.includes("hundred")) {
+    nHandsString = "100 Play";
+  }
+
+  if (nHandsString) {
+    return (
+      <>
+        {gameName} - {nHandsString}
+      </>
+    );
+  }
+
+  return <>{gameName}</>;
 };

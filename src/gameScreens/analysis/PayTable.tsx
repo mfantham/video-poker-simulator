@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback, useState } from "react";
+import { CSSProperties, Fragment, useCallback, useState } from "react";
 import styled from "styled-components";
 
 import { useBetSize, useVariant } from "../../redux/hooks";
@@ -61,11 +61,8 @@ export const PayTable = () => {
 
   if (collapse) {
     return (
-      <PayString>
-        <ToggleCollapseButton
-          className="material-symbols-rounded"
-          onClick={toggleCollapse}
-        >
+      <PayString onClick={toggleCollapse}>
+        <ToggleCollapseButton className="material-symbols-rounded">
           add_circle
         </ToggleCollapseButton>
       </PayString>
@@ -98,17 +95,14 @@ export const PayTable = () => {
         </div>
       );
     });
-    return <>{cells}</>;
+    return <Fragment key={rowIdx}>{cells}</Fragment>;
   });
   return (
-    <PayStringHolder>
+    <PayStringHolder onClick={toggleCollapse}>
       <PayTableElement>
         {rows}
         <HighlightColumn column={betSize + 1} length={rows.length} />
-        <ToggleCollapseButton
-          className="material-symbols-rounded"
-          onClick={toggleCollapse}
-        >
+        <ToggleCollapseButton className="material-symbols-rounded">
           do_not_disturb_on
         </ToggleCollapseButton>
       </PayTableElement>

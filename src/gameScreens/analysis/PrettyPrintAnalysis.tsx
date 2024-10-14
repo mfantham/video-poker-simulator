@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Tooltip } from "@mui/material";
 
 import { HoldsTable } from "../../types/Hold";
 import { intToHoldString } from "../../utils/intToHoldString";
@@ -6,6 +7,7 @@ import { SortIndex } from "../../types/SortIndex";
 import { Hand } from "../../types/hand";
 import { GHand } from "../../graphics/gHand";
 import { HidePattern } from "../../types/HidePattern";
+import { ReactNode } from "react";
 
 const DEFAULT_HOLDS_LENGTH = 32;
 
@@ -20,13 +22,29 @@ const TableHead = styled.thead`
   margin-bottom: 100px;
 `;
 
-const TH = styled.th`
+const THStyled = styled.th`
   padding: 0 5px;
   position: sticky;
   top: 0; // Required for the stickiness
   backdrop-filter: blur(10px);
   z-index: 3;
+  cursor: default;
 `;
+
+const TDStatistic = styled.td`
+  padding: 0 5px;
+`;
+
+const TH = ({ title, children }: { title?: string; children?: ReactNode }) => {
+  if (!title) {
+    return <THStyled>{children}</THStyled>;
+  }
+  return (
+    <Tooltip title={title}>
+      <THStyled>{children}</THStyled>
+    </Tooltip>
+  );
+};
 
 const HoldsDisplay = ({
   holdPattern,
@@ -56,14 +74,46 @@ const HoldsDisplay = ({
   return <span>holdPattern</span>;
 };
 
+const PrettyPrintAnalysisHeadings = ({
+  abbreviatedHeadings,
+}: {
+  abbreviatedHeadings?: boolean;
+}) => {
+  if (abbreviatedHeadings) {
+    return (
+      <TableHead>
+        <tr>
+          <TH>Hold</TH>
+          <TH title="Expected win (coins)">E(win)/$</TH>
+          <TH title="Probability of win (%)">P(win)/%</TH>
+          <TH title="Max possible win (coins)">M(win)/$</TH>
+        </tr>
+      </TableHead>
+    );
+  }
+
+  return (
+    <TableHead>
+      <tr>
+        <TH>Hold</TH>
+        <TH>Expected win (coins)</TH>
+        <TH>Chance of win %</TH>
+        <TH>Max possible win</TH>
+      </tr>
+    </TableHead>
+  );
+};
+
 export const PrettyPrintAnalysis = ({
   analysisTable,
   holdsOrder,
   sortedHand,
+  abbreviatedHeadings,
 }: {
   analysisTable: HoldsTable;
   holdsOrder?: SortIndex;
   sortedHand?: Hand;
+  abbreviatedHeadings?: boolean;
 }) => {
   let rows = new Array(DEFAULT_HOLDS_LENGTH).fill(0).map((_, idx) => (
     <tr key={idx}>
@@ -75,8 +125,8 @@ export const PrettyPrintAnalysis = ({
   if (analysisTable?.length > 0) {
     rows = analysisTable.map(([holdPattern, holdStats]) => {
       const statsColumns = Object.values(holdStats).map((v, i) => {
-        if (i === 2) return <td key={i}>{v.toFixed(0)}</td>;
-        return <td key={i}>{v.toPrecision(5)}</td>;
+        if (i === 2) return <TDStatistic key={i}>{v.toFixed(0)}</TDStatistic>;
+        return <TDStatistic key={i}>{v.toPrecision(5)}</TDStatistic>;
       });
 
       return (
@@ -97,14 +147,9 @@ export const PrettyPrintAnalysis = ({
   return (
     <TableHolder>
       <table>
-        <TableHead>
-          <tr>
-            <TH>Hold</TH>
-            <TH>Expected win (coins)</TH>
-            <TH>Chance of win %</TH>
-            <TH>Max possible win</TH>
-          </tr>
-        </TableHead>
+        <PrettyPrintAnalysisHeadings
+          abbreviatedHeadings={abbreviatedHeadings}
+        />
         <tbody>{rows}</tbody>
       </table>
     </TableHolder>

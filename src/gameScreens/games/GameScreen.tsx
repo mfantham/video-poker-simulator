@@ -48,6 +48,7 @@ export const GameScreen = () => {
         <AnalysisTable
           handIdx={analysisHandIdx}
           handSortOrder={analysisHandSortOrder}
+          abbreviatedHeadings={true}
         />
       )}
       <MenuBar />

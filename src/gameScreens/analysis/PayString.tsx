@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { HTMLAttributes, FunctionComponent } from "react";
 import styled from "styled-components";
 
 import { useBetSize, useVariant } from "../../redux/hooks";
@@ -14,11 +14,9 @@ export const PayStringHolder = styled.div`
   overflow: hidden;
 `;
 
-interface PayStringProps {
-  children?: ReactNode;
-}
+type PayStringType = FunctionComponent<HTMLAttributes<HTMLDivElement>>;
 
-export const PayString = ({ children }: PayStringProps) => {
+export const PayString: PayStringType = ({ children, ...rest }) => {
   const variant = useVariant();
   const nameWinTable = paytable(variant);
   const betSize = useBetSize();
@@ -29,7 +27,7 @@ export const PayString = ({ children }: PayStringProps) => {
     .filter((x) => x)
     .join(", ");
   return (
-    <PayStringHolder>
+    <PayStringHolder {...rest}>
       {winsString}
       {children}
     </PayStringHolder>

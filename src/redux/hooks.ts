@@ -29,6 +29,7 @@ import { Hand } from "../types/hand";
 import { Stages } from "./types";
 import { Deck } from "../types/deck";
 import { sleep } from "../utils/sleep";
+import { deal } from "../mechanics/deal";
 
 export const useStage = () => useAppSelector((state) => state.game.stage);
 export const useSetStage = () => {
@@ -113,7 +114,12 @@ export const useSetNHands = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (nHands: N_HANDS) => dispatch(setNHands(nHands)),
+    (nHands: N_HANDS) => {
+      const [newDeal] = deal();
+      const newHands = new Array(nHands).fill(newDeal);
+      dispatch(setCurrentHands(newHands));
+      dispatch(setNHands(nHands));
+    },
     [dispatch]
   );
 };
@@ -202,7 +208,10 @@ export const useClearWins = () => {
   }, [dispatch]);
 };
 
-export const useWin = () => useAppSelector((state) => state.game.wins[0]);
+export const useWin = () =>
+  useAppSelector(
+    (state) => state.game.wins[0] ?? { winId: 0, winAmount: 0, winName: "" }
+  );
 export const useWins = () => useAppSelector((state) => state.game.wins);
 export const usePay = () => useAppSelector((state) => state.game.pay);
 

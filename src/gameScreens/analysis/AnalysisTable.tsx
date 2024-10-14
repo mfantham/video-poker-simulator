@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Dialog, DialogTitle, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { PrettyPrintAnalysis } from "./PrettyPrintAnalysis";
 import { evaluateHand } from "../../strategy/evaluateHand";
 import { HoldsTable } from "../../types/Hold";
-import { useNHands, useVariant } from "../../redux/hooks";
+import {
+  useNHands,
+  useToggleShowAnalysis,
+  useVariant,
+} from "../../redux/hooks";
 import { SortIndex } from "../../types/SortIndex";
 import { handIdxToHand } from "../../utils/handIdxToHand";
 import { N_HANDS } from "../../types/variant";
-import { Dialog } from "@mui/material";
 
 const AnalysisTimeHolder = styled.div`
   position: absolute;
@@ -33,10 +38,12 @@ export const AnalysisTable = ({
   showTime = false,
   handIdx,
   handSortOrder,
+  abbreviatedHeadings,
 }: {
   showTime?: boolean;
   handIdx: number;
   handSortOrder?: SortIndex;
+  abbreviatedHeadings?: boolean;
 }) => {
   const variant = useVariant();
   const sortedHand = handIdxToHand(handIdx);
@@ -44,6 +51,7 @@ export const AnalysisTable = ({
 
   const [analysis, setAnalysis] = useState([] as HoldsTable);
   const [analysisTime, setAnalysisTime] = useState(0);
+  const toggleShowAnalysis = useToggleShowAnalysis();
 
   useEffect(() => {
     setAnalysis([]); // Analysis table not valid for this new hand/variant!
@@ -58,11 +66,25 @@ export const AnalysisTable = ({
 
   if (nHands > N_HANDS.ONE) {
     return (
-      <Dialog open={true}>
+      <Dialog open={true} onClose={toggleShowAnalysis}>
+        <DialogTitle>
+          <IconButton
+            onClick={toggleShowAnalysis}
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              zIndex: 3,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <PrettyPrintAnalysis
           analysisTable={analysis}
           holdsOrder={handSortOrder}
           sortedHand={sortedHand}
+          abbreviatedHeadings={abbreviatedHeadings}
         />
       </Dialog>
     );

@@ -14,11 +14,13 @@ const HandHolder = styled.div<{ mini?: boolean; winName?: string }>`
   gap: ${(p) => (p.mini ? "2px" : "10px")};
   border: ${(p) =>
     p.winName && p.mini
-      ? `5px solid ${WinColors[p.winName ?? ""] ?? "#333333"}`
+      ? `2px solid ${WinColors[p.winName ?? ""] ?? "#333333"}`
+      : p.mini
+      ? `2px solid #00000000`
       : "none"};
   margin: auto;
   position: relative;
-  border-radius: 10px;
+  border-radius: ${(p) => (p.mini ? "7px" : "10px")};
 `;
 
 const WinInfo = styled.div<{ winName: string }>`
@@ -46,8 +48,9 @@ const MiniWinInfoText = styled.div<{ winName: string }>`
   padding: 0 10px;
   color: white;
   background: #222222bb;
-  border: 5px solid ${(p) => WinColors[p.winName] ?? "#333333"};
-  margin: -5px 0;
+  backdrop-filter: blur(1px);
+  border: 2px solid ${(p) => WinColors[p.winName] ?? "#333333"};
+  margin: -2px 0;
 `;
 
 const WinAmountText = styled.div<{ winName: string }>`
