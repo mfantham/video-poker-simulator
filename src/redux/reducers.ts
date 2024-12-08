@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Deck } from "../types/deck";
 import { Hand } from "../types/hand";
 import { deal } from "../mechanics/deal";
+import { HoldsTable } from "../types/Hold";
 import { N_HANDS, VARIANT } from "../types/variant";
 import { HandInfo, Stages, Win } from "./types";
 import { handToHandIdx } from "../utils/handToHandIdx";
@@ -12,6 +13,13 @@ import { sortHand } from "../utils/sortHand";
 
 const MAX_BET = 5;
 const COINS_PER_BET_ORDER = [0.25, 0.5, 1, 2, 5];
+
+type AnalysisState = {
+  holdsTable: HoldsTable;
+  analysisTime: number;
+  handIdx: number;
+  variant: VARIANT;
+};
 
 interface AppState {
   variant: VARIANT;
@@ -30,6 +38,8 @@ interface AppState {
     payRemaining: number;
   };
   showAnalysis: boolean;
+  analysis: AnalysisState;
+  statsHistory: Array<AnalysisState>;
   speed: number;
   volume: number;
 }
@@ -64,6 +74,13 @@ export const initialState: AppState = {
   wins: [{ winId: 0, winAmount: 0, winName: "" }],
   pay: { payAmount: 0, payRemaining: 0 },
   showAnalysis: false,
+  analysis: {
+    holdsTable: [],
+    analysisTime: 0,
+    handIdx: -1,
+    variant: VARIANT.NONE,
+  },
+  statsHistory: [],
   speed: 2,
   volume: 0,
 };
@@ -190,6 +207,26 @@ export const gameSlice = createSlice({
     incrementVolume: (state) => {
       state.volume = (state.volume + 1) % 3;
     },
+    setCurrentAnalysis: (
+      state,
+      {
+        payload: { analysis, analysisTime, handIdx, variant },
+      }: {
+        payload: {
+          analysis: HoldsTable;
+          analysisTime: number;
+          handIdx: number;
+          variant: VARIANT;
+        };
+      }
+    ) => {
+      state.analysis = {
+        holdsTable: analysis,
+        analysisTime,
+        handIdx: handIdx,
+        variant: variant,
+      };
+    },
   },
 });
 
@@ -217,4 +254,5 @@ export const {
   toggleShowAnalysis,
   incrementSpeed,
   incrementVolume,
+  setCurrentAnalysis,
 } = gameSlice.actions;

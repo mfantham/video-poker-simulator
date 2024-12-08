@@ -54,8 +54,7 @@ const playHandOptimally = async (variant: VARIANT): Promise<GameResult> => {
     variant
   );
   // best hold works on sorted hand...
-  const { sortedHand, sortIndex, inverseSortIndex } = sortHand(dealtHand);
-  const bestHoldUnsorted = inverseSortIndex.map((idx) => bestHold[idx] === "1");
+  const { sortedHand, sortIndex } = sortHand(dealtHand);
   const newHandSorted = [...sortedHand] as Hand;
   bestHold.split("").forEach((hold, idx) => {
     if (hold === "0") {
