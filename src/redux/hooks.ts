@@ -1,6 +1,13 @@
-import { useAppSelector, useAppDispatch } from "./store";
 import { useCallback } from "react";
+import { HoldsTable } from "../types/Hold";
+
 import { N_HANDS, VARIANT } from "../types/variant";
+import { Hand } from "../types/hand";
+import { Deck } from "../types/deck";
+import { sleep } from "../utils/sleep";
+import { deal } from "../mechanics/deal";
+import { Stages } from "./types";
+
 import {
   decrementByAmount,
   incrementBet,
@@ -24,12 +31,9 @@ import {
   setPayout,
   setWins,
   clearWins,
+  setCurrentAnalysis,
 } from "./reducers";
-import { Hand } from "../types/hand";
-import { Stages } from "./types";
-import { Deck } from "../types/deck";
-import { sleep } from "../utils/sleep";
-import { deal } from "../mechanics/deal";
+import { useAppSelector, useAppDispatch } from "./store";
 
 export const useStage = () => useAppSelector((state) => state.game.stage);
 export const useSetStage = () => {
@@ -58,6 +62,11 @@ export const useCurrentHandIdx = () =>
 export const useVariant = () => useAppSelector((state) => state.game.variant);
 
 export const useNHands = () => useAppSelector((state) => state.game.nHands);
+
+export const useCurrentAnalysis = () => {
+  const state = useAppSelector((state) => state.game.analysis);
+  return state;
+};
 
 export const useSetCurrentHand = () => {
   const dispatch = useAppDispatch();
@@ -256,4 +265,27 @@ export const useIncrementVolume = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(() => dispatch(incrementVolume()), [dispatch]);
+};
+
+export const useSetAnalysisState = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (
+      analysis: HoldsTable,
+      analysisTime: number,
+      handIdx: number,
+      variant: VARIANT
+    ) => {
+      dispatch(
+        setCurrentAnalysis({
+          analysis,
+          analysisTime,
+          handIdx,
+          variant,
+        })
+      );
+    },
+    [dispatch]
+  );
 };

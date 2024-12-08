@@ -8,6 +8,7 @@ import {
   useShowAnalysis,
 } from "../../redux/hooks";
 import { HandDealer } from "../../graphics/HandDealer";
+import { useContinuousAnalysis } from "../../strategy/useAnalysis";
 import { MenuBar } from "../menu/MenuBar";
 import { GameStatus } from "../menu/GameStatus";
 import { PayTable } from "../analysis/PayTable";
@@ -32,8 +33,9 @@ export const GameScreen = () => {
   const showAnalysis = useShowAnalysis();
   const nHands = useNHands();
 
-  const analysisHandIdx = dealtHand.handIdx;
   const analysisHandSortOrder = dealtHand.handSortOrder;
+
+  useContinuousAnalysis();
 
   useEffect(() => {
     setStage(Stages.PREGAME);
@@ -46,7 +48,6 @@ export const GameScreen = () => {
       <HandDealer nHands={nHands} />
       {showAnalysis && (
         <AnalysisTable
-          handIdx={analysisHandIdx}
           handSortOrder={analysisHandSortOrder}
           abbreviatedHeadings={true}
         />

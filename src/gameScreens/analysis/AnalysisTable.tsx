@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Dialog, DialogTitle, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { PrettyPrintAnalysis } from "./PrettyPrintAnalysis";
-import { evaluateHand } from "../../strategy/evaluateHand";
-import { HoldsTable } from "../../types/Hold";
 import {
+  useCurrentAnalysis,
   useNHands,
   useToggleShowAnalysis,
-  useVariant,
 } from "../../redux/hooks";
 import { SortIndex } from "../../types/SortIndex";
 import { handIdxToHand } from "../../utils/handIdxToHand";
@@ -36,33 +33,19 @@ const AnalysisTime = ({ showTime = false, analysisTime = 0 }) => {
 
 export const AnalysisTable = ({
   showTime = false,
-  handIdx,
   handSortOrder,
   abbreviatedHeadings,
 }: {
   showTime?: boolean;
-  handIdx: number;
   handSortOrder?: SortIndex;
   abbreviatedHeadings?: boolean;
 }) => {
-  const variant = useVariant();
-  const sortedHand = handIdxToHand(handIdx);
   const nHands = useNHands();
 
-  const [analysis, setAnalysis] = useState([] as HoldsTable);
-  const [analysisTime, setAnalysisTime] = useState(0);
-  const toggleShowAnalysis = useToggleShowAnalysis();
+  const { holdsTable, analysisTime, handIdx } = useCurrentAnalysis();
+  const sortedHand = handIdxToHand(handIdx);
 
-  useEffect(() => {
-    setAnalysis([]); // Analysis table not valid for this new hand/variant!
-    setAnalysisTime(0);
-    const tic = performance.now();
-    evaluateHand(handIdx, variant).then((analysisTable) => {
-      const toc = performance.now();
-      setAnalysisTime(toc - tic);
-      setAnalysis(analysisTable);
-    });
-  }, [variant, handIdx]);
+  const toggleShowAnalysis = useToggleShowAnalysis();
 
   if (nHands > N_HANDS.ONE) {
     return (
@@ -81,7 +64,7 @@ export const AnalysisTable = ({
           </IconButton>
         </DialogTitle>
         <PrettyPrintAnalysis
-          analysisTable={analysis}
+          analysisTable={holdsTable}
           holdsOrder={handSortOrder}
           sortedHand={sortedHand}
           abbreviatedHeadings={abbreviatedHeadings}
@@ -93,7 +76,7 @@ export const AnalysisTable = ({
   return (
     <>
       <PrettyPrintAnalysis
-        analysisTable={analysis}
+        analysisTable={holdsTable}
         holdsOrder={handSortOrder}
         sortedHand={sortedHand}
       />
