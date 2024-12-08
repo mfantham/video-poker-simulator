@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import {
   useCurrentAnalysis,
+  useCurrentHandIdx,
   useDealtHand,
   useSetAnalysisState,
   useStage,
   useVariant,
-} from "../../redux/hooks";
-import { Stages } from "../../redux/types";
-import { evaluateHand } from "../../strategy/evaluateHand";
-import { VARIANT } from "../../types/variant";
+} from "../redux/hooks";
+import { Stages } from "../redux/types";
+import { evaluateHand } from "./evaluateHand";
 
 export const useContinuousAnalysis = () => {
   const stage = useStage();
@@ -19,25 +19,28 @@ export const useContinuousAnalysis = () => {
   const setAnalysis = useSetAnalysisState();
 
   const handIdx = dealtHand.handIdx;
+  const handExplorerHandIdx = useCurrentHandIdx();
 
   useEffect(() => {
     if (stage === Stages.PREGAME) {
       return;
     }
 
+    const handIdxToAnalyse =
+      stage === Stages.EXPLORER ? handExplorerHandIdx : handIdx;
+
     if (
-      currentAnalysis.handIdx === handIdx &&
+      currentAnalysis.handIdx === handIdxToAnalyse &&
       currentAnalysis.variant === variant
     ) {
       return;
     }
 
-    setAnalysis([], 0, -1, VARIANT.NONE); // Analysis table not valid for this new hand/variant!
     const tic = performance.now();
-    evaluateHand(handIdx, variant).then((analysisTable) => {
+    evaluateHand(handIdxToAnalyse, variant).then((analysisTable) => {
       const toc = performance.now();
       const analysisTime = toc - tic;
-      setAnalysis(analysisTable, analysisTime, handIdx, variant);
+      setAnalysis(analysisTable, analysisTime, handIdxToAnalyse, variant);
     });
   }, [
     stage,
@@ -46,5 +49,7 @@ export const useContinuousAnalysis = () => {
     setAnalysis,
     currentAnalysis.handIdx,
     currentAnalysis.variant,
+    handExplorerHandIdx,
+    currentAnalysis,
   ]);
 };

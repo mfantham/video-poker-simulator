@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect } from "react";
 import { GHand } from "../../graphics/gHand";
 import { choose } from "../../strategy/combinations";
+import { useContinuousAnalysis } from "../../strategy/useAnalysis";
 import { VariantSelector } from "../VariantSelector";
 import {
   useCurrentHand,
@@ -36,6 +37,8 @@ export const HandExplorer = () => {
   const winAmount = payout(winId, variant);
   const winAmountText = winAmount > 0 ? `Wins ${winAmount} ⨉ bet` : "";
 
+  useContinuousAnalysis();
+
   return (
     <AnalysisPageHolder>
       <AnalysisHeaderHolder>
@@ -61,7 +64,7 @@ export const HandExplorer = () => {
         </WinNameHolder>
       </AnalysisHeaderHolder>
       <GHand hand={hand} editable={true} />
-      <AnalysisTable showTime={true} handIdx={handIdx} />
+      <AnalysisTable showTime={true} />
     </AnalysisPageHolder>
   );
 };

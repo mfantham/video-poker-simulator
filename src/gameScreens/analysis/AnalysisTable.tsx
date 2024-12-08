@@ -33,19 +33,17 @@ const AnalysisTime = ({ showTime = false, analysisTime = 0 }) => {
 
 export const AnalysisTable = ({
   showTime = false,
-  handIdx,
   handSortOrder,
   abbreviatedHeadings,
 }: {
   showTime?: boolean;
-  handIdx: number;
   handSortOrder?: SortIndex;
   abbreviatedHeadings?: boolean;
 }) => {
-  const sortedHand = handIdxToHand(handIdx);
   const nHands = useNHands();
 
-  const { holdsTable, analysisTime } = useCurrentAnalysis();
+  const { holdsTable, analysisTime, handIdx } = useCurrentAnalysis();
+  const sortedHand = handIdxToHand(handIdx);
 
   const toggleShowAnalysis = useToggleShowAnalysis();
 
