@@ -8,35 +8,42 @@ import { sleep } from "../utils/sleep";
 import { deal } from "../mechanics/deal";
 import { Stages } from "./types";
 
+import { useAppSelector, useAppDispatch } from "./store";
 import {
-  decrementByAmount,
-  incrementBet,
-  incrementByAmount,
   incrementCoinsPerBet,
   incrementSpeed,
   incrementVolume,
-  resetHolds,
-  setCurrentDeck,
-  setCurrentHand,
-  setCurrentHands,
-  setCurrentHandByIdx,
-  setDealtHand,
-  setMaxBet,
-  setNHands,
-  setStage,
-  setVariant,
-  setWin,
-  toggleHold,
-  toggleShowAnalysis,
-  setPayout,
-  setWins,
-  clearWins,
-  setCurrentAnalysis,
   toggleWarnMistakes,
   toggleOverlayOptimalPlay,
+} from "./settingsSlice";
+import {
+  increment,
+  decrement,
+  incrementByAmount,
+  decrementByAmount,
+  addStatsHistory,
+} from "./statsSlice";
+import {
+  setCurrentHandByIdx,
+  setCurrentHand,
+  setCurrentHands,
+  setDealtHand,
+  setCurrentDeck,
+  setVariant,
+  setNHands,
+  setStage,
+  resetHolds,
+  toggleHold,
+  setWin,
+  setWins,
+  clearWins,
+  setPayout,
+  incrementBet,
+  setMaxBet,
+  toggleShowAnalysis,
   setShowWarning,
-} from "./reducers";
-import { useAppSelector, useAppDispatch } from "./store";
+  setCurrentAnalysis,
+} from "./gameSlice";
 
 export const useStage = () => useAppSelector((state) => state.game.stage);
 export const useSetStage = () => {
@@ -158,7 +165,7 @@ export const useSetDeck = () => {
   );
 };
 
-export const useCoins = () => useAppSelector((state) => state.game.coins);
+export const useCoins = () => useAppSelector((state) => state.stats.coins);
 export const useIncrement = () => {
   const dispatch = useAppDispatch();
 
@@ -229,7 +236,7 @@ export const usePay = () => useAppSelector((state) => state.game.pay);
 
 export const useBetSize = () => useAppSelector((state) => state.game.betSize);
 export const useCoinsPerBet = () =>
-  useAppSelector((state) => state.game.coinsPerBet);
+  useAppSelector((state) => state.settings.coinsPerBet);
 
 export const useSetMaxBet = () => {
   const dispatch = useAppDispatch();
@@ -256,7 +263,7 @@ export const useToggleShowAnalysis = () => {
 export const useShowAnalysis = () =>
   useAppSelector((state) => state.game.showAnalysis);
 
-export const useSpeed = () => useAppSelector((state) => state.game.speed);
+export const useSpeed = () => useAppSelector((state) => state.settings.speed);
 export const useIncrementSpeed = () => {
   const dispatch = useAppDispatch();
 
@@ -275,7 +282,7 @@ export const useSetShowWarning = () => {
 export const useShowWarning = () =>
   useAppSelector((state) => state.game.showWarning);
 
-export const useVolume = () => useAppSelector((state) => state.game.volume);
+export const useVolume = () => useAppSelector((state) => state.settings.volume);
 export const useIncrementVolume = () => {
   const dispatch = useAppDispatch();
 
@@ -283,7 +290,7 @@ export const useIncrementVolume = () => {
 };
 
 export const useWarnMistakes = () =>
-  useAppSelector((state) => state.game.warnMistakes);
+  useAppSelector((state) => state.settings.warnMistakes);
 export const useToggleWarnMistakes = () => {
   const dispatch = useAppDispatch();
 
@@ -291,7 +298,7 @@ export const useToggleWarnMistakes = () => {
 };
 
 export const useOverlayOptimalPlay = () =>
-  useAppSelector((state) => state.game.overlayOptimalPlay);
+  useAppSelector((state) => state.settings.overlayOptimalPlay);
 export const useToggleOverlayOptimalPlay = () => {
   const dispatch = useAppDispatch();
 

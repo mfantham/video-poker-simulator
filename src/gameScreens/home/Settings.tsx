@@ -1,5 +1,7 @@
+import { Checkbox, FormControlLabel } from "@mui/material";
 import styled from "styled-components";
 import {
+  useIncrementVolume,
   useOverlayOptimalPlay,
   useToggleOverlayOptimalPlay,
   useToggleWarnMistakes,
@@ -16,6 +18,7 @@ const SettingsHolder = styled.div`
 const SettingHolder = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const BooleanSwitchHolder = styled.div`
@@ -28,13 +31,31 @@ const BooleanSwitchHolder = styled.div`
 const BooleanSwitch = ({
   toggle,
   value,
+  label,
 }: {
   toggle: () => void;
   value: boolean;
+  label: string;
 }) => {
   return (
-    <BooleanSwitchHolder onClick={toggle}>
-      {value ? "YES" : "NO"}
+    <BooleanSwitchHolder>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={value}
+            onClick={toggle}
+            sx={{
+              color: "white",
+              "&.Mui-checked": {
+                color: "white",
+              },
+              "& .MuiSvgIcon-root": { fontSize: 28 },
+            }}
+          />
+        }
+        label={label}
+        sx={{ "& .MuiFormControlLabel-label": { fontSize: 27 } }}
+      />
     </BooleanSwitchHolder>
   );
 };
@@ -45,23 +66,28 @@ export const Settings = () => {
   const toggleWarnMistakes = useToggleWarnMistakes();
   const overlayOptimalPlay = useOverlayOptimalPlay();
   const toggleOverlayOptimalPlay = useToggleOverlayOptimalPlay();
+  const incrementVolume = useIncrementVolume();
 
   return (
     <SettingsHolder>
       <h1>Settings</h1>
       <SettingHolder>
-        Volume: <VolumeButton />
+        <BooleanSwitch
+          value={warnMistakes}
+          toggle={toggleWarnMistakes}
+          label={"Warn on sub-optimal play"}
+        />
       </SettingHolder>
       <SettingHolder>
-        Warn on sub-optimal play:{" "}
-        <BooleanSwitch value={warnMistakes} toggle={toggleWarnMistakes} />
-      </SettingHolder>
-      <SettingHolder>
-        Overlay optimal play:{" "}
         <BooleanSwitch
           value={overlayOptimalPlay}
           toggle={toggleOverlayOptimalPlay}
+          label={"Overlay optimal play"}
         />
+      </SettingHolder>
+      <SettingHolder onClick={incrementVolume}>
+        <VolumeButton />
+        Volume
       </SettingHolder>
     </SettingsHolder>
   );

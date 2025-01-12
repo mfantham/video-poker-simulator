@@ -1,15 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { GHand } from "../graphics/gHand";
-import { useAppDispatch, useAppSelector } from "../redux/store";
+import { useCoins } from "../redux/hooks";
+import { useAppDispatch } from "../redux/store";
 import { calculatePayout } from "../payoutCalculations/dumb-luck/calculatePayout";
 import { deal } from "../mechanics/deal";
-import { decrementByAmount, incrementByAmount } from "../redux/reducers";
+import { decrementByAmount, incrementByAmount } from "../redux/statsSlice";
 import { costOfGame } from "../payoutCalculations/dumb-luck/payout";
 
 export const DumbLuck = () => {
   const dispatch = useAppDispatch();
   // const hand = useAppSelector((s) => s.game.currentHand);
-  const coins = useAppSelector((s) => s.game.coins);
+  const coins = useCoins();
   const [payout, setPayout] = useState(NaN);
   const [hand, setHand] = useState(deal()[0]);
 

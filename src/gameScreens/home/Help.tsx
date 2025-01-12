@@ -16,10 +16,16 @@ export const Help = () => {
       </p>
       <p>
         Try{" "}
-        <a href="https://www.ncpgambling.org/help-treatment/faq/">
+        <a
+          href="https://www.ncpgambling.org/help-treatment/faq/"
+          target="_blank"
+        >
           https://www.ncpgambling.org/
         </a>{" "}
-        or <a href="https://www.gamcare.org.uk/">https://www.gamcare.org.uk/</a>{" "}
+        or{" "}
+        <a href="https://www.gamcare.org.uk/" target="_blank">
+          https://www.gamcare.org.uk/
+        </a>{" "}
         to get started.
       </p>
     </HelpHolder>

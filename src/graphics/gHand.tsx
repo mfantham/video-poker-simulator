@@ -132,7 +132,8 @@ export const GHand = ({
       if (holdable) toggleHold(idx);
     };
     const cardSortedIdx = handSortOrder?.[idx];
-    const isOptimal = optimalHolds?.[cardSortedIdx] === "1";
+    const isOptimal =
+      overlayOptimalPlay && optimalHolds?.[cardSortedIdx] === "1";
 
     return (
       <GCard
