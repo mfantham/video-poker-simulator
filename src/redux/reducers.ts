@@ -38,10 +38,13 @@ interface AppState {
     payRemaining: number;
   };
   showAnalysis: boolean;
+  showWarning: boolean;
   analysis: AnalysisState;
   statsHistory: Array<AnalysisState>;
   speed: number;
   volume: number;
+  warnMistakes: boolean;
+  overlayOptimalPlay: boolean;
 }
 
 const [initialHand, initialDeck]: [Hand, Deck] = deal();
@@ -74,6 +77,7 @@ export const initialState: AppState = {
   wins: [{ winId: 0, winAmount: 0, winName: "" }],
   pay: { payAmount: 0, payRemaining: 0 },
   showAnalysis: false,
+  showWarning: false,
   analysis: {
     holdsTable: [],
     analysisTime: 0,
@@ -81,8 +85,10 @@ export const initialState: AppState = {
     variant: VARIANT.NONE,
   },
   statsHistory: [],
-  speed: 2,
+  speed: 2, // These should come from local storage
   volume: 0,
+  warnMistakes: false,
+  overlayOptimalPlay: false,
 };
 
 export const gameSlice = createSlice({
@@ -201,11 +207,20 @@ export const gameSlice = createSlice({
     toggleShowAnalysis: (state) => {
       state.showAnalysis = !state.showAnalysis;
     },
+    setShowWarning: (state, { payload: showWarning }) => {
+      state.showWarning = showWarning;
+    },
     incrementSpeed: (state) => {
       state.speed = (state.speed + 1) % 4;
     },
     incrementVolume: (state) => {
       state.volume = (state.volume + 1) % 3;
+    },
+    toggleWarnMistakes: (state) => {
+      state.warnMistakes = !state.warnMistakes;
+    },
+    toggleOverlayOptimalPlay: (state) => {
+      state.overlayOptimalPlay = !state.overlayOptimalPlay;
     },
     setCurrentAnalysis: (
       state,
@@ -252,7 +267,10 @@ export const {
   incrementBet,
   incrementCoinsPerBet,
   toggleShowAnalysis,
+  setShowWarning,
   incrementSpeed,
   incrementVolume,
+  toggleWarnMistakes,
+  toggleOverlayOptimalPlay,
   setCurrentAnalysis,
 } = gameSlice.actions;

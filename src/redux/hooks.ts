@@ -32,6 +32,9 @@ import {
   setWins,
   clearWins,
   setCurrentAnalysis,
+  toggleWarnMistakes,
+  toggleOverlayOptimalPlay,
+  setShowWarning,
 } from "./reducers";
 import { useAppSelector, useAppDispatch } from "./store";
 
@@ -260,11 +263,39 @@ export const useIncrementSpeed = () => {
   return useCallback(() => dispatch(incrementSpeed()), [dispatch]);
 };
 
+export const useSetShowWarning = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (showWarning: boolean) => dispatch(setShowWarning(showWarning)),
+    [dispatch]
+  );
+};
+
+export const useShowWarning = () =>
+  useAppSelector((state) => state.game.showWarning);
+
 export const useVolume = () => useAppSelector((state) => state.game.volume);
 export const useIncrementVolume = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(() => dispatch(incrementVolume()), [dispatch]);
+};
+
+export const useWarnMistakes = () =>
+  useAppSelector((state) => state.game.warnMistakes);
+export const useToggleWarnMistakes = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(toggleWarnMistakes()), [dispatch]);
+};
+
+export const useOverlayOptimalPlay = () =>
+  useAppSelector((state) => state.game.overlayOptimalPlay);
+export const useToggleOverlayOptimalPlay = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(toggleOverlayOptimalPlay()), [dispatch]);
 };
 
 export const useSetAnalysisState = () => {
@@ -288,4 +319,24 @@ export const useSetAnalysisState = () => {
     },
     [dispatch]
   );
+};
+
+export const useOptimalHolds = () => {
+  const currentAnalysis = useCurrentAnalysis();
+  if (currentAnalysis.analysisTime > 0) {
+    const { holdsTable } = currentAnalysis;
+    const allPayouts = holdsTable.map(
+      ([_, { expectedPayout }]) => expectedPayout
+    );
+
+    const bestValue = Math.max(...allPayouts);
+    console.log(bestValue);
+    const bestHolds = holdsTable.filter(
+      (hold) => hold[1].expectedPayout === bestValue
+    );
+    console.log(bestHolds);
+    console.log(bestHolds.map((hold) => hold[0]));
+    return bestHolds.map((hold) => hold[0]);
+  }
+  return null;
 };
