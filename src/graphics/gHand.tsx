@@ -3,7 +3,15 @@ import Grid2 from "@mui/material/Unstable_Grid2"; // Grid version 2
 import { Hand } from "../types/hand";
 import { GCard } from "./gCard";
 import styled from "styled-components";
-import { useBetSize, useHolds, useStage, useToggleHold } from "../redux/hooks";
+import {
+  useBetSize,
+  useDealtHand,
+  useHolds,
+  useOptimalHolds,
+  useOverlayOptimalPlay,
+  useStage,
+  useToggleHold,
+} from "../redux/hooks";
 import { Stages, Win } from "../redux/types";
 import { HidePattern } from "../types/HidePattern";
 import { useCallback, useEffect } from "react";
@@ -95,6 +103,10 @@ export const GHand = ({
   const stage = useStage();
   const betSize = useBetSize();
 
+  const overlayOptimalPlay = useOverlayOptimalPlay();
+  const optimalHolds = useOptimalHolds()?.[0];
+  const { handSortOrder } = useDealtHand();
+
   const hidden = stage === Stages.PREGAME;
   if (hidden) {
     hide = [true, true, true, true, true];
@@ -119,6 +131,8 @@ export const GHand = ({
     const holdCallback = (idx: number) => {
       if (holdable) toggleHold(idx);
     };
+    const cardSortedIdx = handSortOrder?.[idx];
+    const isOptimal = optimalHolds?.[cardSortedIdx] === "1";
 
     return (
       <GCard
@@ -127,6 +141,7 @@ export const GHand = ({
         card={card}
         hidden={hide[idx]}
         editable={editable}
+        optimal={isOptimal}
         holdable={holdable}
         hold={fixedHolds?.[idx] ?? holds[idx]}
         holdCallback={() => holdCallback(idx)}

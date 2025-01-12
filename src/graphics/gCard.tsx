@@ -100,9 +100,20 @@ const Hold = styled.div`
   text-shadow: 0 0 0.5em #ffb851;
 `;
 
+const Optimal = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0em;
+  color: #ffb851;
+  font-size: 3vw;
+  font-weight: 1000;
+  text-shadow: 0 0 0.5em #ffb851;
+`;
+
 export const GCard = ({
   card,
   editable,
+  optimal,
   holdable,
   hold,
   holdCallback,
@@ -112,6 +123,7 @@ export const GCard = ({
   card: Card;
   editable?: boolean;
   holdable?: boolean;
+  optimal?: boolean;
   hold?: boolean;
   holdCallback?: () => void;
   hidden?: boolean;
@@ -172,6 +184,7 @@ export const GCard = ({
             {suitSymbol}
             <GFace value={card.value} />
             {holdable && hold && <Hold>HOLD</Hold>}
+            {optimal && <Optimal>☆</Optimal>}
           </FrontOfCard>
         )}
       </CardDiv>

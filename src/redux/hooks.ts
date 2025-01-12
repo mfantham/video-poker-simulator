@@ -330,12 +330,9 @@ export const useOptimalHolds = () => {
     );
 
     const bestValue = Math.max(...allPayouts);
-    console.log(bestValue);
     const bestHolds = holdsTable.filter(
       (hold) => hold[1].expectedPayout === bestValue
     );
-    console.log(bestHolds);
-    console.log(bestHolds.map((hold) => hold[0]));
     return bestHolds.map((hold) => hold[0]);
   }
   return null;
