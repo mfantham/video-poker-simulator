@@ -1,3 +1,5 @@
+import { runCpuAnalysis } from "./runCpuAnalysis";
+
 const N_HANDS = 2598960; // 52C5: number of possible poker hands
 const N_HOLDS = 32; // 2^5: number of possible hold combinations
 const WORKGROUP_SIZE = 40; // This needs to be both a factor of N_HANDS and smaller than 256
@@ -13,6 +15,11 @@ export const runGpuAnalysis = async (
 
   const device = await adapter.requestDevice();
   if (!device) throw Error("Couldn’t request WebGPU logical device.");
+
+  if (true){
+    // CPU fallback / comparison
+    return runCpuAnalysis(handIndex, paytableArray);
+  }
 
   const paytable = Uint32Array.from(paytableArray);
 
