@@ -8,32 +8,42 @@ import { sleep } from "../utils/sleep";
 import { deal } from "../mechanics/deal";
 import { Stages } from "./types";
 
+import { useAppSelector, useAppDispatch } from "./store";
 import {
-  decrementByAmount,
-  incrementBet,
-  incrementByAmount,
   incrementCoinsPerBet,
   incrementSpeed,
   incrementVolume,
-  resetHolds,
-  setCurrentDeck,
+  toggleWarnMistakes,
+  toggleOverlayOptimalPlay,
+} from "./settingsSlice";
+import {
+  increment,
+  decrement,
+  incrementByAmount,
+  decrementByAmount,
+  addStatsHistory,
+} from "./statsSlice";
+import {
+  setCurrentHandByIdx,
   setCurrentHand,
   setCurrentHands,
-  setCurrentHandByIdx,
   setDealtHand,
-  setMaxBet,
+  setCurrentDeck,
+  setVariant,
   setNHands,
   setStage,
-  setVariant,
-  setWin,
+  resetHolds,
   toggleHold,
-  toggleShowAnalysis,
-  setPayout,
+  setWin,
   setWins,
   clearWins,
+  setPayout,
+  incrementBet,
+  setMaxBet,
+  toggleShowAnalysis,
+  setShowWarning,
   setCurrentAnalysis,
-} from "./reducers";
-import { useAppSelector, useAppDispatch } from "./store";
+} from "./gameSlice";
 
 export const useStage = () => useAppSelector((state) => state.game.stage);
 export const useSetStage = () => {
@@ -155,7 +165,7 @@ export const useSetDeck = () => {
   );
 };
 
-export const useCoins = () => useAppSelector((state) => state.game.coins);
+export const useCoins = () => useAppSelector((state) => state.stats.coins);
 export const useIncrement = () => {
   const dispatch = useAppDispatch();
 
@@ -226,7 +236,7 @@ export const usePay = () => useAppSelector((state) => state.game.pay);
 
 export const useBetSize = () => useAppSelector((state) => state.game.betSize);
 export const useCoinsPerBet = () =>
-  useAppSelector((state) => state.game.coinsPerBet);
+  useAppSelector((state) => state.settings.coinsPerBet);
 
 export const useSetMaxBet = () => {
   const dispatch = useAppDispatch();
@@ -253,18 +263,46 @@ export const useToggleShowAnalysis = () => {
 export const useShowAnalysis = () =>
   useAppSelector((state) => state.game.showAnalysis);
 
-export const useSpeed = () => useAppSelector((state) => state.game.speed);
+export const useSpeed = () => useAppSelector((state) => state.settings.speed);
 export const useIncrementSpeed = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(() => dispatch(incrementSpeed()), [dispatch]);
 };
 
-export const useVolume = () => useAppSelector((state) => state.game.volume);
+export const useSetShowWarning = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (showWarning: boolean) => dispatch(setShowWarning(showWarning)),
+    [dispatch]
+  );
+};
+
+export const useShowWarning = () =>
+  useAppSelector((state) => state.game.showWarning);
+
+export const useVolume = () => useAppSelector((state) => state.settings.volume);
 export const useIncrementVolume = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(() => dispatch(incrementVolume()), [dispatch]);
+};
+
+export const useWarnMistakes = () =>
+  useAppSelector((state) => state.settings.warnMistakes);
+export const useToggleWarnMistakes = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(toggleWarnMistakes()), [dispatch]);
+};
+
+export const useOverlayOptimalPlay = () =>
+  useAppSelector((state) => state.settings.overlayOptimalPlay);
+export const useToggleOverlayOptimalPlay = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(toggleOverlayOptimalPlay()), [dispatch]);
 };
 
 export const useSetAnalysisState = () => {
@@ -288,4 +326,21 @@ export const useSetAnalysisState = () => {
     },
     [dispatch]
   );
+};
+
+export const useOptimalHolds = () => {
+  const currentAnalysis = useCurrentAnalysis();
+  if (currentAnalysis.analysisTime > 0) {
+    const { holdsTable } = currentAnalysis;
+    const allPayouts = holdsTable.map(
+      ([_, { expectedPayout }]) => expectedPayout
+    );
+
+    const bestValue = Math.max(...allPayouts);
+    const bestHolds = holdsTable.filter(
+      (hold) => hold[1].expectedPayout === bestValue
+    );
+    return bestHolds.map((hold) => hold[0]);
+  }
+  return null;
 };

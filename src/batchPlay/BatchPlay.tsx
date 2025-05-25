@@ -5,7 +5,7 @@ import { CircularProgress } from "@mui/material";
 import { deal } from "../mechanics/deal";
 import { HistoryGraph } from "./HistoryGraph";
 import { HandHistory } from "./HandHistory";
-import { initialState } from "../redux/reducers";
+import { initialState } from "../redux/statsSlice";
 import { evaluateBestHolds } from "../strategy/evaluateHand";
 import { VARIANT } from "../types/variant";
 import { handToHandIdx } from "../utils/handToHandIdx";

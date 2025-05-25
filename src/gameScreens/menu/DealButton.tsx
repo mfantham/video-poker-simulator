@@ -10,16 +10,18 @@ import {
   useHolds,
   useIncrement,
   useNHands,
+  useOptimalHolds,
   useResetHolds,
   useSetCurrentHand,
   useSetCurrentHands,
   useSetDealtHand,
   useSetDeck,
+  useSetShowWarning,
   useSetStage,
   useSetWin,
-  useSetWins,
   useStage,
   useVariant,
+  useWarnMistakes,
 } from "../../redux/hooks";
 import { deal, newDeck, shuffle } from "../../mechanics/deal";
 import { Hand } from "../../types/hand";
@@ -27,7 +29,7 @@ import { calculateWins, payout } from "../../payoutCalculations";
 import { MenuButton } from "./MenuButton";
 import { N_HANDS } from "../../types/variant";
 
-export const DealButton = () => {
+export const DealButton = ({ forceDraw = false }) => {
   const gameStage = useStage();
   const setStage = useSetStage();
   const setCurrentHand = useSetCurrentHand();
@@ -38,8 +40,10 @@ export const DealButton = () => {
   const incrementCoins = useIncrement();
   const decrementCoins = useDecrement();
   const holds = useHolds();
+  const warnMistakes = useWarnMistakes();
+  const setShowWarning = useSetShowWarning();
+  const optimalHolds = useOptimalHolds();
   const setWin = useSetWin();
-  const setWins = useSetWins();
   const clearWins = useClearWins();
   const variant = useVariant();
   const betSize = useBetSize();
@@ -78,6 +82,25 @@ export const DealButton = () => {
 
   const handleDraw = useCallback(() => {
     const currentIdxes = currentHand.map(({ idx }) => idx);
+
+    if (warnMistakes && optimalHolds && !forceDraw) {
+      const sortOrder = dealtHand.handSortOrder;
+      const sortedOptimalHolds = optimalHolds.map((optimalHold) =>
+        optimalHold
+          .split("")
+          .map((v, idx) => optimalHold.split("")[sortOrder[idx]])
+      );
+
+      const noMistakes = sortedOptimalHolds.some((optimalHold) =>
+        optimalHold.every((hold, idx) => Number(hold) === Number(holds[idx]))
+      );
+      if (!noMistakes) {
+        setShowWarning(true);
+        return;
+      }
+    }
+
+    setShowWarning(false);
     const newHands = [];
 
     for (let h = 0; h < nHands; h++) {
@@ -115,13 +138,18 @@ export const DealButton = () => {
     coinsPerBet,
     currentHand,
     dealtHand.hand,
+    dealtHand.handSortOrder,
+    forceDraw,
     holds,
     incrementCoins,
     nHands,
+    optimalHolds,
     setCurrentHands,
+    setShowWarning,
     setStage,
     setWin,
     variant,
+    warnMistakes,
   ]);
 
   if (gameStage === Stages.DEALT) {

@@ -6,9 +6,11 @@ import {
   useNHands,
   useSetStage,
   useShowAnalysis,
+  useShowWarning,
 } from "../../redux/hooks";
 import { HandDealer } from "../../graphics/HandDealer";
 import { useContinuousAnalysis } from "../../strategy/useAnalysis";
+import { SubOptimalWarning } from "../home/SubOptimalWarning";
 import { MenuBar } from "../menu/MenuBar";
 import { GameStatus } from "../menu/GameStatus";
 import { PayTable } from "../analysis/PayTable";
@@ -52,6 +54,7 @@ export const GameScreen = () => {
           abbreviatedHeadings={true}
         />
       )}
+      <SubOptimalWarning />
       <MenuBar />
     </GameDiv>
   );

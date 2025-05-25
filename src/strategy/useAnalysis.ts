@@ -36,6 +36,8 @@ export const useContinuousAnalysis = () => {
       return;
     }
 
+    setAnalysis([], 0, handIdxToAnalyse, variant);
+
     const tic = performance.now();
     evaluateHand(handIdxToAnalyse, variant).then((analysisTable) => {
       const toc = performance.now();
