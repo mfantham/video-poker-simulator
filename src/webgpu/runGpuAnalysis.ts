@@ -7,19 +7,20 @@ const N_WORKGROUPS = N_HANDS / WORKGROUP_SIZE; // This needs to be a factor of N
 
 export const runGpuAnalysis = async (
   handIndex: number,
-  paytableArray: number[]
+  paytableArray: number[],
+  useWebGPU: boolean = true
 ) => {
+  if (!useWebGPU) {
+    // CPU fallback / comparison
+    return runCpuAnalysis(handIndex, paytableArray);
+  }
+  
   if (!navigator?.gpu) throw Error("WebGPU not supported.");
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) throw Error("Couldn’t request WebGPU adapter.");
 
   const device = await adapter.requestDevice();
   if (!device) throw Error("Couldn’t request WebGPU logical device.");
-
-  if (true){
-    // CPU fallback / comparison
-    return runCpuAnalysis(handIndex, paytableArray);
-  }
 
   const paytable = Uint32Array.from(paytableArray);
 

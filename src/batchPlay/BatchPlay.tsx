@@ -9,7 +9,7 @@ import { initialState } from "../redux/statsSlice";
 import { evaluateBestHolds } from "../strategy/evaluateHand";
 import { VARIANT } from "../types/variant";
 import { handToHandIdx } from "../utils/handToHandIdx";
-import { useSetStage, useVariant } from "../redux/hooks";
+import { useSetStage, useVariant, useWebGPUAnalysis } from "../redux/hooks";
 import { VariantSelector } from "../gameScreens/VariantSelector";
 import { Hand } from "../types/hand";
 import { GameResult } from "../types/GameResult";
@@ -46,12 +46,13 @@ const ResultsHolder = styled.div`
   }
 `;
 
-const playHandOptimally = async (variant: VARIANT): Promise<GameResult> => {
+const playHandOptimally = async (variant: VARIANT, useWebGPU: boolean = true): Promise<GameResult> => {
   const [dealtHand, currentDeck] = deal();
   const handId = handToHandIdx(dealtHand);
   const { bestHold, bestExpectedPayout } = await evaluateBestHolds(
     handId,
-    variant
+    variant,
+    useWebGPU
   );
   // best hold works on sorted hand...
   const { sortedHand, sortIndex } = sortHand(dealtHand);
@@ -93,6 +94,7 @@ const PlayGamesButtons = ({ callback }: { callback: Function }) => {
 export const BatchPlay = () => {
   const variant = useVariant();
   const setStage = useSetStage();
+  const useWebGPU = useWebGPUAnalysis();
   const [progress, setProgress] = useState<number>(100);
   const [history, setHistory] = useState<Array<GameResult>>([]);
   const [coinsHistory, setCoinsHistory] = useState<Array<number>>([
@@ -106,7 +108,7 @@ export const BatchPlay = () => {
     async (n = 100) => {
       for (let i = 0; i < n; i++) {
         // Play 1 game at a time so that history updates
-        const result = await playHandOptimally(variant);
+        const result = await playHandOptimally(variant, useWebGPU);
         setHistory((s) => [...s, result]);
         setCoinsHistory((s) => [
           ...s,
