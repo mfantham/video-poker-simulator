@@ -9,6 +9,7 @@ export interface SettingsState {
   volume: number;
   warnMistakes: boolean;
   overlayOptimalPlay: boolean;
+  webGPUAnalysis: boolean;
 }
 
 const initialState: SettingsState = {
@@ -17,6 +18,7 @@ const initialState: SettingsState = {
   volume: 0,
   warnMistakes: false,
   overlayOptimalPlay: false,
+  webGPUAnalysis: true,
 };
 
 export const settingsSlice = createSlice({
@@ -42,6 +44,9 @@ export const settingsSlice = createSlice({
     toggleOverlayOptimalPlay: (state) => {
       state.overlayOptimalPlay = !state.overlayOptimalPlay;
     },
+    toggleWebGPUAnalysis: (state) => {
+      state.webGPUAnalysis = !state.webGPUAnalysis;
+    },
   },
 });
 
@@ -51,6 +56,7 @@ export const {
   incrementVolume,
   toggleWarnMistakes,
   toggleOverlayOptimalPlay,
+  toggleWebGPUAnalysis,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

@@ -6,6 +6,8 @@ import {
   useToggleOverlayOptimalPlay,
   useToggleWarnMistakes,
   useWarnMistakes,
+  useWebGPUAnalysis,
+  useToggleWebGPUAnalysis,
 } from "../../redux/hooks";
 import { VolumeButton } from "../menu/VolumeButton";
 
@@ -32,13 +34,15 @@ const BooleanSwitch = ({
   toggle,
   value,
   label,
+  title,
 }: {
   toggle: () => void;
   value: boolean;
   label: string;
+  title?: string;
 }) => {
   return (
-    <BooleanSwitchHolder>
+    <BooleanSwitchHolder title={title}>
       <FormControlLabel
         control={
           <Checkbox
@@ -66,6 +70,8 @@ export const Settings = () => {
   const toggleWarnMistakes = useToggleWarnMistakes();
   const overlayOptimalPlay = useOverlayOptimalPlay();
   const toggleOverlayOptimalPlay = useToggleOverlayOptimalPlay();
+  const webGPUAnalysis = useWebGPUAnalysis();
+  const toggleWebGPUAnalysis = useToggleWebGPUAnalysis();
   const incrementVolume = useIncrementVolume();
 
   return (
@@ -89,6 +95,14 @@ export const Settings = () => {
         <VolumeButton />
         Volume
       </SettingHolder>
+      <br />
+      <br />
+      <BooleanSwitch
+        value={webGPUAnalysis}
+        toggle={toggleWebGPUAnalysis}
+        label={"WebGPU analysis"}
+        title={"Improve hand analysis speed by 100X"}
+      />
     </SettingsHolder>
   );
 };

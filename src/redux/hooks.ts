@@ -15,6 +15,7 @@ import {
   incrementVolume,
   toggleWarnMistakes,
   toggleOverlayOptimalPlay,
+  toggleWebGPUAnalysis,
 } from "./settingsSlice";
 import {
   increment,
@@ -303,6 +304,14 @@ export const useToggleOverlayOptimalPlay = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(() => dispatch(toggleOverlayOptimalPlay()), [dispatch]);
+};
+
+export const useWebGPUAnalysis = () =>
+  useAppSelector((state) => state.settings.webGPUAnalysis);
+export const useToggleWebGPUAnalysis = () => {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => dispatch(toggleWebGPUAnalysis()), [dispatch]);
 };
 
 export const useSetAnalysisState = () => {

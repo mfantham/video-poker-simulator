@@ -6,6 +6,7 @@ import {
   useSetAnalysisState,
   useStage,
   useVariant,
+  useWebGPUAnalysis,
 } from "../redux/hooks";
 import { Stages } from "../redux/types";
 import { evaluateHand } from "./evaluateHand";
@@ -15,7 +16,7 @@ export const useContinuousAnalysis = () => {
   const variant = useVariant();
   const dealtHand = useDealtHand();
   const currentAnalysis = useCurrentAnalysis();
-
+  const useWebGPU = useWebGPUAnalysis();
   const setAnalysis = useSetAnalysisState();
 
   const handIdx = dealtHand.handIdx;
@@ -39,7 +40,7 @@ export const useContinuousAnalysis = () => {
     setAnalysis([], 0, handIdxToAnalyse, variant);
 
     const tic = performance.now();
-    evaluateHand(handIdxToAnalyse, variant).then((analysisTable) => {
+    evaluateHand(handIdxToAnalyse, variant, useWebGPU).then((analysisTable) => {
       const toc = performance.now();
       const analysisTime = toc - tic;
       setAnalysis(analysisTable, analysisTime, handIdxToAnalyse, variant);

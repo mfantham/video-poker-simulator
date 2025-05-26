@@ -1,3 +1,5 @@
+import { runCpuAnalysis } from "./runCpuAnalysis";
+
 const N_HANDS = 2598960; // 52C5: number of possible poker hands
 const N_HOLDS = 32; // 2^5: number of possible hold combinations
 const WORKGROUP_SIZE = 40; // This needs to be both a factor of N_HANDS and smaller than 256
@@ -5,8 +7,14 @@ const N_WORKGROUPS = N_HANDS / WORKGROUP_SIZE; // This needs to be a factor of N
 
 export const runGpuAnalysis = async (
   handIndex: number,
-  paytableArray: number[]
+  paytableArray: number[],
+  useWebGPU: boolean = true
 ) => {
+  if (!useWebGPU) {
+    // CPU fallback / comparison
+    return runCpuAnalysis(handIndex, paytableArray);
+  }
+  
   if (!navigator?.gpu) throw Error("WebGPU not supported.");
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) throw Error("Couldn’t request WebGPU adapter.");

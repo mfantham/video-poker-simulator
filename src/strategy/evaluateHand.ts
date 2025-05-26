@@ -6,10 +6,11 @@ import { getAllPayouts } from "../payoutCalculations";
 
 export const evaluateHand = async (
   handIndex: number,
-  variant: VARIANT
+  variant: VARIANT,
+  useWebGPU: boolean = true
 ): Promise<HoldsTable> => {
   return new Promise((resolve) => {
-    resolve(evaluateHandSync(handIndex, variant));
+    resolve(evaluateHandSync(handIndex, variant, useWebGPU));
   });
 };
 
@@ -24,10 +25,11 @@ const memoPayoutTable = async (variant: VARIANT) => {
 
 export const evaluateBestHolds = async (
   handIndex: number,
-  variant: VARIANT
+  variant: VARIANT,
+  useWebGPU: boolean = true
 ) => {
   const allPayouts = await memoPayoutTable(variant);
-  const gpuAnalysisResult = await runGpuAnalysis(handIndex, allPayouts);
+  const gpuAnalysisResult = await runGpuAnalysis(handIndex, allPayouts, useWebGPU);
   let bestExpectedPayout = 0;
   let bestHoldId = -1;
   gpuAnalysisResult.holdIds.forEach((holdId) => {
@@ -42,10 +44,17 @@ export const evaluateBestHolds = async (
   return { bestExpectedPayout, bestHold: intToHoldString(bestHoldId) };
 };
 
-export const evaluateHandSync = async (handIndex: number, variant: VARIANT) => {
+export const evaluateHandSync = async (
+  handIndex: number,
+  variant: VARIANT,
+  useWebGPU: boolean = true
+) => {
   const allPayouts = await memoPayoutTable(variant);
-  const gpuAnalysisResult = await runGpuAnalysis(handIndex, allPayouts);
-
+  const gpuAnalysisResult = await runGpuAnalysis(
+    handIndex,
+    allPayouts,
+    useWebGPU
+  );
   const holdStats = gpuAnalysisResult.holdIds.map((holdId) => {
     const totalPayout = gpuAnalysisResult.totalPayout[holdId];
     const totalSwaps = gpuAnalysisResult.totalSwaps[holdId];
